@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.smsa.highValueAlerts.DTO.ThresholdDTO;
+import com.smsa.highValueAlerts.entity.SmsaRecepientMaster;
 import com.smsa.highValueAlerts.entity.SmsaThresholdMaster;
 import com.smsa.highValueAlerts.entity.SmsaThresholdTemp;
 import com.smsa.highValueAlerts.repository.ThresholdMasterRepo;
@@ -141,6 +142,38 @@ public class SmsaThresholdTempService {
         smsaThresholdTemp.setVerifiedDate(thresholdDTO.getVerifiedDate());
         smsaThresholdTemp.setAction(thresholdDTO.getAction());
         return smsaThresholdTemp;
+    }
+
+
+    public SmsaThresholdMaster buildTempToMaster(ThresholdDTO thresholdDTO) {
+        SmsaThresholdMaster smsaThresholdTemp = new SmsaThresholdMaster();
+
+        smsaThresholdTemp.setThresholdId(thresholdDTO.getThresholdId() != null ? thresholdDTO.getThresholdId() : null);
+        smsaThresholdTemp.setMsgCurrency(thresholdDTO.getMsgCurrency());
+        smsaThresholdTemp.setSenderBic(thresholdDTO.getSenderBic());
+        smsaThresholdTemp.setMsgType(thresholdDTO.getMsgType());
+        smsaThresholdTemp.setCategoryAFromAmount(thresholdDTO.getCategoryAFromAmount());
+        smsaThresholdTemp.setCategoryAToAmount(thresholdDTO.getCategoryAToAmount());
+        smsaThresholdTemp.setCategoryBFromAmount(thresholdDTO.getCategoryBFromAmount());
+        smsaThresholdTemp.setCategoryBToAmount(thresholdDTO.getCategoryBToAmount());
+        smsaThresholdTemp.setCreatedBy(thresholdDTO.getCreatedBy());
+        smsaThresholdTemp.setCreatedDate(thresholdDTO.getCreatedDate());
+        smsaThresholdTemp.setModifiedBy(thresholdDTO.getModifiedBy());
+        smsaThresholdTemp.setModifiedDate(thresholdDTO.getModifiedDate());
+        smsaThresholdTemp.setVerifiedBy(thresholdDTO.getVerifiedBy());
+        smsaThresholdTemp.setVerifiedDate(thresholdDTO.getVerifiedDate());
+        // smsaThresholdTemp.setSmsaStatus("Active");
+        return smsaThresholdTemp;
+    }
+
+    public String approveRejectThresholdData(ThresholdDTO thresholdDTO, String action) {
+        if (action.equalsIgnoreCase("Approved")) {
+            SmsaThresholdMaster srm = buildTempToMaster(thresholdDTO);
+            thresholdMasterRepo.save(srm);
+            return "Saved Successfully in master";
+
+        }
+        return "Rejected Successfully";
     }
 
 }
