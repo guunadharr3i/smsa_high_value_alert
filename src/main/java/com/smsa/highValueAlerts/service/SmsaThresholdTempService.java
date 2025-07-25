@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.smsa.highValueAlerts.DTO.ThresholdDTO;
-import com.smsa.highValueAlerts.entity.SmsaRecepientMaster;
 import com.smsa.highValueAlerts.entity.SmsaThresholdMaster;
 import com.smsa.highValueAlerts.entity.SmsaThresholdTemp;
 import com.smsa.highValueAlerts.repository.ThresholdMasterRepo;
