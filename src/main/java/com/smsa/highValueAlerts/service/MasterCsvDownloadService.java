@@ -19,9 +19,9 @@ import org.springframework.beans.factory.annotation.Autowired;
  *
  * @author abcom
  */
-public class CsvDownloadService {
+public class MasterCsvDownloadService {
 
-    private static final org.apache.logging.log4j.Logger log = LogManager.getLogger(CsvDownloadService.class);
+    private static final org.apache.logging.log4j.Logger log = LogManager.getLogger(MasterCsvDownloadService.class);
 
     @Autowired
     private SmsaRecepientMasterService recepientMasterService;
