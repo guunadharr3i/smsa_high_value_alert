@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
@@ -44,6 +45,39 @@ public class SmsaThresholdMasterService {
     @Autowired
     private ThresholdMasterRepo thresholdMasterRepo;
     private static final Logger logger = LogManager.getLogger(SmsaThresholdMasterService.class);
+    public List<ThresholdDTO> getFilteredMessages(ThresholdFilterPojo filters) {
+        List<ThresholdDTO> pojoList = new ArrayList<>();
+
+        try {
+            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+
+            CriteriaQuery<SmsaThresholdMaster> query = cb.createQuery(SmsaThresholdMaster.class);
+            Root<SmsaThresholdMaster> root = query.from(SmsaThresholdMaster.class);
+            List<Predicate> predicates = buildDynamicPredicates(filters, cb, root);
+
+            query.select(root).distinct(true);
+            if (!predicates.isEmpty()) {
+                query.where(cb.and(predicates.toArray(new Predicate[0])));
+            }
+
+            TypedQuery<SmsaThresholdMaster> typedQuery = entityManager.createQuery(query);
+
+            // If using a relational DB, this helps JDBC layer.
+            typedQuery.setHint("org.hibernate.fetchSize", 1000);
+
+            // Stream processing — better memory usage
+            try (Stream<SmsaThresholdMaster> stream = typedQuery.getResultList().stream()) {
+                pojoList = stream
+                        .map(this::mapToPojo)
+                        .collect(Collectors.toList());
+            }
+
+        } catch (Exception e) {
+            logger.error("Exception occurred while filtering Swift messages: {}", e.getMessage(), e);
+        }
+
+        return pojoList;
+    }
 
     public Page<ThresholdDTO> getFilteredMessages(ThresholdFilterPojo filter, Pageable pageable) {
         logger.info("Executing getFilteredMessages with filter: {}", filter);

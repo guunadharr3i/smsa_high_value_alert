@@ -143,7 +143,6 @@ public class SmsaThresholdTempService {
         return smsaThresholdTemp;
     }
 
-
     public SmsaThresholdMaster buildTempToMaster(ThresholdDTO thresholdDTO) {
         SmsaThresholdMaster smsaThresholdTemp = new SmsaThresholdMaster();
 
@@ -161,7 +160,7 @@ public class SmsaThresholdTempService {
         smsaThresholdTemp.setModifiedDate(thresholdDTO.getModifiedDate());
         smsaThresholdTemp.setVerifiedBy(thresholdDTO.getVerifiedBy());
         smsaThresholdTemp.setVerifiedDate(thresholdDTO.getVerifiedDate());
-        // smsaThresholdTemp.setSmsaStatus("Active");
+        smsaThresholdTemp.setStatus("Active");
         return smsaThresholdTemp;
     }
 

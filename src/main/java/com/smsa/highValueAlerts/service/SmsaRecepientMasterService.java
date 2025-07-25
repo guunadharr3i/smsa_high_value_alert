@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
@@ -46,6 +47,39 @@ public class SmsaRecepientMasterService {
     private RecepientMasterRepo recepientMasterRepo;
 
     private static final Logger logger = LogManager.getLogger(SmsaRecepientMasterService.class);
+    public List<RecepientDTO> getFilteredMessages(RecepientFilterPojo filters) {
+        List<RecepientDTO> pojoList = new ArrayList<>();
+
+        try {
+            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+
+            CriteriaQuery<SmsaRecepientMaster> query = cb.createQuery(SmsaRecepientMaster.class);
+            Root<SmsaRecepientMaster> root = query.from(SmsaRecepientMaster.class);
+            List<Predicate> predicates = buildDynamicPredicates(filters, cb, root);
+
+            query.select(root).distinct(true);
+            if (!predicates.isEmpty()) {
+                query.where(cb.and(predicates.toArray(new Predicate[0])));
+            }
+
+            TypedQuery<SmsaRecepientMaster> typedQuery = entityManager.createQuery(query);
+
+            // If using a relational DB, this helps JDBC layer.
+            typedQuery.setHint("org.hibernate.fetchSize", 1000);
+
+            // Stream processing — better memory usage
+            try (Stream<SmsaRecepientMaster> stream = typedQuery.getResultList().stream()) {
+                pojoList = stream
+                        .map(this::mapToPojo)
+                        .collect(Collectors.toList());
+            }
+
+        } catch (Exception e) {
+            logger.error("Exception occurred while filtering Swift messages: {}", e.getMessage(), e);
+        }
+
+        return pojoList;
+    }
 
     public Page<RecepientDTO> getFilteredMessages(RecepientFilterPojo filter, Pageable pageable) {
         logger.info("Executing getFilteredMessages with filter: {}", filter);
