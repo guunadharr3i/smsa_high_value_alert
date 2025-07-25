@@ -3,6 +3,7 @@ package com.smsa.highValueAlerts.controller;
 import com.smsa.highValueAlerts.DTO.RecepientDTO;
 import com.smsa.highValueAlerts.DTO.ReciepientRequestDto;
 import com.smsa.highValueAlerts.DTO.ThresholdDTO;
+import com.smsa.highValueAlerts.DTO.ThresholdRequestDTO;
 import com.smsa.highValueAlerts.service.SmsaRecepientMasterService;
 import com.smsa.highValueAlerts.service.SmsaRecepientTempService;
 import com.smsa.highValueAlerts.service.SmsaThresholdMasterService;
@@ -21,13 +22,13 @@ public class SmsaHighValueAlertsController {
 
     @Autowired
     SmsaRecepientTempService smsaRecepientTempService;
-    
+
     @Autowired
     SmsaRecepientMasterService smsaRecepientMasterService;
-    
+
     @Autowired
     SmsaThresholdTempService smsaThresholdTempService;
-    
+
     @Autowired
     SmsaThresholdMasterService smsaThresholdMasterService;
 
@@ -39,7 +40,7 @@ public class SmsaHighValueAlertsController {
                 String addMsg = smsaRecepientTempService.addRecepientTempData(reciepientRequestDto.getRecepientDTO());
                 return ResponseEntity.ok(addMsg);
             case "UPDATE":
-                String updateMsg=smsaRecepientTempService.updateRecieptData(reciepientRequestDto.getRecepientDTO());
+                String updateMsg = smsaRecepientTempService.updateRecieptData(reciepientRequestDto.getRecepientDTO());
 
                 return ResponseEntity.ok(updateMsg);
             case "DELETE":
@@ -48,41 +49,75 @@ public class SmsaHighValueAlertsController {
                     return ResponseEntity.ok("Delete Request Went for approval");
                 }
                 return ResponseEntity.ok("Id not found to delete");
+            case "Approved":
+                String aproved = smsaRecepientTempService.approveRejectRecepientData(reciepientRequestDto.getRecepientDTO(), "Approved");
+                return ResponseEntity.ok(aproved);
+            case "Rejected":
+                String rejected = smsaRecepientTempService.approveRejectRecepientData(reciepientRequestDto.getRecepientDTO(), "Rejected");
+                return ResponseEntity.ok(rejected);
             default:
                 return ResponseEntity.badRequest().body("Invalid operationType: " + reciepientRequestDto.getOperation());
 
         }
     }
 
+    @PostMapping("/threshold/actions")
+    public ResponseEntity<?> thresholdData(@RequestBody ThresholdRequestDTO thresholdRequestDTO) {
+        switch (thresholdRequestDTO.getOperation().toUpperCase()) {
+            case "ADD":
+                String addMsg = smsaThresholdTempService.addThresholdTempData(thresholdRequestDTO.getThresholdDTO());
+                return ResponseEntity.ok(addMsg);
+            case "UPDATE":
+                String updateMsg = smsaThresholdTempService.updateThresholdData(thresholdRequestDTO.getThresholdDTO());
+
+                return ResponseEntity.ok(updateMsg);
+            case "DELETE":
+                if (thresholdRequestDTO.getThresholdDTO().getThresholdId() != null) {
+                    smsaRecepientTempService.deleteRecepientByEmpId(thresholdRequestDTO.getThresholdDTO().getThresholdId());
+                    return ResponseEntity.ok("Delete Request Went for approval");
+                }
+                return ResponseEntity.ok("Id not found to delete");
+            case "Approved":
+                String aproved = smsaThresholdTempService.approveRejectThresholdData(thresholdRequestDTO.getThresholdDTO(), "Approved");
+                return ResponseEntity.ok(aproved);
+            case "Rejected":
+                String rejected = smsaThresholdTempService.approveRejectThresholdData(thresholdRequestDTO.getThresholdDTO(), "Rejected");
+                return ResponseEntity.ok(rejected);
+            default:
+                return ResponseEntity.badRequest().body("Invalid operationType: " + thresholdRequestDTO.getOperation());
+
+        }
+    }
+
     @PostMapping("/recepient/fetchRecepientTempData")
     public ResponseEntity<?> getRecepientTempData(@RequestBody Map<String, String> tokenMap) {
-        
-        List<RecepientDTO> recepientTempData= smsaRecepientTempService.getRecepientTempData();
-        
+
+        List<RecepientDTO> recepientTempData = smsaRecepientTempService.getRecepientTempData();
+
         return ResponseEntity.ok(recepientTempData);
     }
-    
+
     @PostMapping("/recepient/fetchRecepientMasterData")
     public ResponseEntity<?> getRecepientMasterData(@RequestBody Map<String, String> tokenMap) {
-        
-        List<RecepientDTO> recepientMasterData= smsaRecepientMasterService.getRecepientMasterData();
-        
+
+        List<RecepientDTO> recepientMasterData = smsaRecepientMasterService.getRecepientMasterData();
+
         return ResponseEntity.ok(recepientMasterData);
     }
-    
+
     @PostMapping("/threshold/fetchThresholdTempData")
     public ResponseEntity<?> getThresholdTempData(@RequestBody Map<String, String> tokenMap) {
-        
-        List<ThresholdDTO> thresholdTempData= smsaThresholdTempService.getThresholdTempData();
-        
+
+        List<ThresholdDTO> thresholdTempData = smsaThresholdTempService.getThresholdTempData();
+
         return ResponseEntity.ok(thresholdTempData);
     }
-    
+
     @PostMapping("/threshold/fetchThresholdMasterData")
     public ResponseEntity<?> getThresholdMasterData(@RequestBody Map<String, String> tokenMap) {
-        
-        List<ThresholdDTO> thresholdMasterData= smsaThresholdMasterService.getThresholdMasterData();
-        
+
+        List<ThresholdDTO> thresholdMasterData = smsaThresholdMasterService.getThresholdMasterData();
+
         return ResponseEntity.ok(thresholdMasterData);
     }
 

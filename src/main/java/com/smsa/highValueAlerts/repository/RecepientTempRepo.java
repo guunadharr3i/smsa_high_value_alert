@@ -10,11 +10,11 @@ import java.util.Optional;
 public interface RecepientTempRepo extends JpaRepository<SmsaRecepientTemp, Long> {
     // Custom query methods can be added here
 
-    boolean existsByUniqueCombo(
-        String smsaEmpId,
-        String smsaGeoName,
-        String smsaSenderBic,
-        Long smsaMsgType
+    boolean existsBySmsaEmpIdAndSmsaGeoNameAndSmsaSenderBicAndSmsaMsgType(
+            String smsaEmpId,
+            String smsaGeoName,
+            String smsaSenderBic,
+            Long smsaMsgType
     );
 
     Optional<SmsaRecepientTemp> findBySmsaEmpId(String smsaEmpId);

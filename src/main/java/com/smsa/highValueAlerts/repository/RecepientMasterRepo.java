@@ -9,10 +9,11 @@ import com.smsa.highValueAlerts.entity.SmsaRecepientMaster;
 public interface RecepientMasterRepo extends JpaRepository<SmsaRecepientMaster, Long> {
 
     // Add custom methods if needed
-    boolean existsByUniqueCombo(
-            String smsaEmpId,
-            String smsaGeoName,
-            String smsaSenderBic,
-            Long smsaMsgType
-    );
+   boolean existsBySmsaEmpIdAndSmsaGeoNameAndSmsaSenderBicAndSmsaMsgType(
+        String smsaEmpId,
+        String smsaGeoName,
+        String smsaSenderBic,
+        Long smsaMsgType
+);
+
 }

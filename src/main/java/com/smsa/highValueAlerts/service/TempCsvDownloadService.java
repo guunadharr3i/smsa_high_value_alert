@@ -4,10 +4,12 @@
  */
 package com.smsa.highValueAlerts.service;
 
+/**
+ *
+ * @author abcom
+ */
 import com.smsa.highValueAlerts.DTO.RecepientDTO;
-import com.smsa.highValueAlerts.DTO.RecepientFilterPojo;
 import com.smsa.highValueAlerts.DTO.ThresholdDTO;
-import com.smsa.highValueAlerts.DTO.ThresholdFilterPojo;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
@@ -21,26 +23,26 @@ import org.springframework.stereotype.Service;
  * @author abcom
  */
 @Service
-public class MasterCsvDownloadService {
+public class TempCsvDownloadService {
 
     private static final org.apache.logging.log4j.Logger log = LogManager.getLogger(MasterCsvDownloadService.class);
 
     @Autowired
-    private SmsaRecepientMasterService recepientMasterService;
+    private SmsaRecepientTempService recepientTempService;
 
     @Autowired
-    private SmsaThresholdMasterService smsaThresholdMasterService;
+    private SmsaThresholdTempService thresholdTempService;
 
-    public byte[] exportRecepientMasterToCsv(RecepientFilterPojo filters) {
+    public byte[] exportRecepientMasterToCsv() {
         log.info("Starting exportRecepientMasterToCsv CSV export...");
 
-        List<RecepientDTO> headers = recepientMasterService.getFilteredMessages(filters);
+        List<RecepientDTO> headers = recepientTempService.getRecepientTempData();
 
         try (ByteArrayOutputStream out = new ByteArrayOutputStream(); OutputStreamWriter writer = new OutputStreamWriter(out, StandardCharsets.UTF_8)) {
 
             // Write Header Row
             writer.write(String.join(",", new String[]{
-                "EmpId", "GeoName", "SenderBic", "MsgType", "EmpName",
+                "Ram Id", "Location", "SenderBic","Emp Id", "EmpName",
                 "Grade",
                 "Created By", "Modified By", "Modified Date", "Verified By", "Verified Date"
             }));
@@ -49,10 +51,9 @@ public class MasterCsvDownloadService {
             // Write Data Rows
             for (RecepientDTO h : headers) {
                 String[] row = new String[]{
-                    safe(h.getSmsaEmpId()),
+                    safe(h.getSmsaRamId()),
                     safe(h.getSmsaGeoName()),
                     safe(h.getSmsaSenderBic()),
-                    safe(h.getSmsaMsgType()),
                     safe(h.getSmsaEmpName()),
                     safe(h.getSmsaGrade()),
                     safe(h.getSmsaCreatedBy()),
@@ -75,10 +76,10 @@ public class MasterCsvDownloadService {
         }
     }
 
-    public byte[] exportThresHoldMasterToCsv(ThresholdFilterPojo filters) {
+    public byte[] exportThresHoldTempToCsv() {
         log.info("Starting exportRecepientMasterToCsv CSV export...");
 
-        List<ThresholdDTO> headers = smsaThresholdMasterService.getFilteredMessages(filters);
+        List<ThresholdDTO> headers = thresholdTempService.getThresholdTempData();
 
         try (ByteArrayOutputStream out = new ByteArrayOutputStream(); OutputStreamWriter writer = new OutputStreamWriter(out, StandardCharsets.UTF_8)) {
 

@@ -25,7 +25,7 @@ public class SmsaThresholdTempService {
     public String addThresholdTempData(ThresholdDTO thresholdDTO) {
 
         // Check uniqueness of the 4-column combination
-        boolean existsInMs = thresholdMasterRepo.existsByUniqueCombo(
+        boolean existsInMs = thresholdMasterRepo.existsByMsgCurrencyAndSenderBicAndMsgType(
                 thresholdDTO.getMsgCurrency(),
                 thresholdDTO.getSenderBic(),
                 thresholdDTO.getMsgType()
@@ -38,7 +38,7 @@ public class SmsaThresholdTempService {
                     thresholdDTO.getSenderBic(),
                     thresholdDTO.getMsgType());
         }
-        boolean existsTemp = thresholdTempRepo.existsByUniqueCombo(
+        boolean existsTemp = thresholdTempRepo.existsByMsgCurrencyAndSenderBicAndMsgType(
                 thresholdDTO.getMsgCurrency(),
                 thresholdDTO.getSenderBic(),
                 thresholdDTO.getMsgType());
@@ -61,11 +61,11 @@ public class SmsaThresholdTempService {
 
     public String updateThresholdData(ThresholdDTO thresholdDTO) {
         if (thresholdDTO.getThresholdId() != null) {
-            boolean existsInMs = thresholdMasterRepo.existsByUniqueCombo(
+            boolean existsInMs = thresholdMasterRepo.existsByMsgCurrencyAndSenderBicAndMsgType(
                     thresholdDTO.getMsgCurrency(),
                     thresholdDTO.getSenderBic(),
                     thresholdDTO.getMsgType());
-            boolean existsTemp = thresholdTempRepo.existsByUniqueCombo(
+            boolean existsTemp = thresholdTempRepo.existsByMsgCurrencyAndSenderBicAndMsgType(
                     thresholdDTO.getMsgCurrency(),
                     thresholdDTO.getSenderBic(),
                     thresholdDTO.getMsgType());
@@ -86,7 +86,7 @@ public class SmsaThresholdTempService {
 
         Optional<SmsaThresholdMaster> existing = thresholdMasterRepo.findById(smsaThresholdID);
         if (existing.isPresent()) {
-            thresholdTempRepo.deleteBySmsaThresholdId(smsaThresholdID);
+            thresholdTempRepo.deleteByThresholdId(smsaThresholdID);
             return "Recipient deleted successfully";
         } else {
             return "Recipient with smsaThresholdID " + smsaThresholdID + " not found";

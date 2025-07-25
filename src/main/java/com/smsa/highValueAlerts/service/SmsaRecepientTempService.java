@@ -25,7 +25,7 @@ public class SmsaRecepientTempService {
     public String addRecepientTempData(RecepientDTO recepientDTO) {
 
         // Check uniqueness of the 4-column combination
-        boolean existsInMs = recepientMasterRepo.existsByUniqueCombo(
+        boolean existsInMs = recepientMasterRepo.existsBySmsaEmpIdAndSmsaGeoNameAndSmsaSenderBicAndSmsaMsgType(
                 recepientDTO.getSmsaEmpId(),
                 recepientDTO.getSmsaGeoName(),
                 recepientDTO.getSmsaSenderBic(),
@@ -41,7 +41,7 @@ public class SmsaRecepientTempService {
                     recepientDTO.getSmsaMsgType()
             );
         }
-        boolean existsTemp = recepientTempRepo.existsByUniqueCombo(
+        boolean existsTemp = recepientTempRepo.existsBySmsaEmpIdAndSmsaGeoNameAndSmsaSenderBicAndSmsaMsgType(
                 recepientDTO.getSmsaEmpId(),
                 recepientDTO.getSmsaGeoName(),
                 recepientDTO.getSmsaSenderBic(),
@@ -67,13 +67,13 @@ public class SmsaRecepientTempService {
 
     public String updateRecieptData(RecepientDTO recepientDTO) {
         if (recepientDTO.getSmsaRamId() != null) {
-            boolean existsInMs = recepientMasterRepo.existsByUniqueCombo(
+            boolean existsInMs = recepientMasterRepo.existsBySmsaEmpIdAndSmsaGeoNameAndSmsaSenderBicAndSmsaMsgType(
                     recepientDTO.getSmsaEmpId(),
                     recepientDTO.getSmsaGeoName(),
                     recepientDTO.getSmsaSenderBic(),
                     recepientDTO.getSmsaMsgType()
             );
-            boolean existsTemp = recepientTempRepo.existsByUniqueCombo(
+            boolean existsTemp = recepientTempRepo.existsBySmsaEmpIdAndSmsaGeoNameAndSmsaSenderBicAndSmsaMsgType(
                     recepientDTO.getSmsaEmpId(),
                     recepientDTO.getSmsaGeoName(),
                     recepientDTO.getSmsaSenderBic(),

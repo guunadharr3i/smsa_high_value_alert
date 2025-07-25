@@ -5,16 +5,13 @@
 package com.smsa.highValueAlerts.service;
 
 import com.smsa.highValueAlerts.DTO.RecepientDTO;
-import com.smsa.highValueAlerts.DTO.RecepientFilterPojo;
 import com.smsa.highValueAlerts.DTO.ThresholdDTO;
-import com.smsa.highValueAlerts.DTO.ThresholdFilterPojo;
-
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -26,19 +23,19 @@ import org.springframework.stereotype.Service;
  * @author abcom
  */
 @Service
-public class MasterXlsDownloadService {
+public class TempXlsDownloadService {
     private static final Logger log = LogManager.getLogger(MasterXlsDownloadService.class);
     
     @Autowired
-    SmsaRecepientMasterService smsaRecepientMasterService;
+    SmsaRecepientTempService smsaRecepientTempService;
 
     @Autowired
-    private SmsaThresholdMasterService smsaThresholdMasterService;
+    private SmsaThresholdTempService smsaThresholdMasterService;
 
-    public byte[] exportSwiftHeadersToSingleExcel(RecepientFilterPojo filters) throws IOException {
+    public byte[] exportRecepientTempToSingleExcel() throws IOException {
         log.info("Starting SwiftMessageHeader single Excel export...");
 
-        List<RecepientDTO> headers = smsaRecepientMasterService.getFilteredMessages(filters);
+        List<RecepientDTO> headers = smsaRecepientTempService.getRecepientTempData();
         if (headers.isEmpty()) {
             log.warn("No SwiftMessageHeader records found. Returning empty Excel.");
         }
@@ -94,10 +91,10 @@ public class MasterXlsDownloadService {
     }
 
    //  download XL for Threshold Master Data
-    public byte[] exportThresholdDataSingleExcel(ThresholdFilterPojo filters) throws IOException {
+    public byte[] exportThresholdDataSingleExcel() throws IOException {
         log.info("Starting SwiftThresholdMessageHeader single Excel export...");
 
-        List<ThresholdDTO> headers = smsaThresholdMasterService.getFilteredMessages(filters);
+        List<ThresholdDTO> headers = smsaThresholdMasterService.getThresholdTempData();
         if (headers.isEmpty()) {
             log.warn("No SwiftThresholdMessageHeader records found. Returning empty Excel.");
         }
