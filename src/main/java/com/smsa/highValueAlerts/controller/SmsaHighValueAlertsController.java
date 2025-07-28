@@ -1,24 +1,21 @@
 package com.smsa.highValueAlerts.controller;
 
-import com.smsa.highValueAlerts.DTO.RecepientDTO;
-import com.smsa.highValueAlerts.DTO.ReciepientRequestDto;
-import com.smsa.highValueAlerts.DTO.ThresholdDTO;
-import com.smsa.highValueAlerts.DTO.ThresholdRequestDTO;
-import com.smsa.highValueAlerts.service.SmsaRecepientMasterService;
-import com.smsa.highValueAlerts.service.SmsaRecepientTempService;
-import com.smsa.highValueAlerts.service.SmsaThresholdMasterService;
-import com.smsa.highValueAlerts.service.SmsaThresholdTempService;
+import com.smsa.highValueAlerts.DTO.*;
+import com.smsa.highValueAlerts.service.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.*;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.Map;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @RestController
 public class SmsaHighValueAlertsController {
+
+    private static final Logger log = LogManager.getLogger(SmsaHighValueAlertsController.class);
 
     @Autowired
     SmsaRecepientTempService smsaRecepientTempService;
@@ -34,96 +31,142 @@ public class SmsaHighValueAlertsController {
 
     @PostMapping("/recipient/actions")
     public ResponseEntity<?> recipientData(@RequestBody ReciepientRequestDto reciepientRequestDto) {
-        switch (reciepientRequestDto.getOperation().toUpperCase()) {
-
-            case "ADD":
-                String addMsg = smsaRecepientTempService.addRecepientTempData(reciepientRequestDto.getRecepientDTO());
-                return ResponseEntity.ok(addMsg);
-            case "UPDATE":
-                String updateMsg = smsaRecepientTempService.updateRecieptData(reciepientRequestDto.getRecepientDTO());
-
-                return ResponseEntity.ok(updateMsg);
-            case "DELETE":
-                if (reciepientRequestDto.getRecepientDTO().getSmsaRamId() != null) {
-                    smsaRecepientTempService.deleteRecepientByEmpId(reciepientRequestDto.getRecepientDTO().getSmsaRamId());
-                    return ResponseEntity.ok("Delete Request Went for approval");
-                }
-                return ResponseEntity.ok("Id not found to delete");
-            case "Approved":
-                String aproved = smsaRecepientTempService.approveRejectRecepientData(reciepientRequestDto.getRecepientDTO(), "Approved");
-                return ResponseEntity.ok(aproved);
-            case "Rejected":
-                String rejected = smsaRecepientTempService.approveRejectRecepientData(reciepientRequestDto.getRecepientDTO(), "Rejected");
-                return ResponseEntity.ok(rejected);
-            default:
-                return ResponseEntity.badRequest().body("Invalid operationType: " + reciepientRequestDto.getOperation());
-
+        log.info("Received recipient operation: {}", reciepientRequestDto.getOperation());
+        try {
+            switch (reciepientRequestDto.getOperation().toUpperCase()) {
+                case "ADD":
+                    String addMsg = smsaRecepientTempService.addRecepientTempData(reciepientRequestDto.getRecepientDTO());
+                    return ResponseEntity.ok(addMsg);
+                case "UPDATE":
+                    String updateMsg = smsaRecepientTempService.updateRecieptData(reciepientRequestDto.getRecepientDTO());
+                    return ResponseEntity.ok(updateMsg);
+                case "DELETE":
+                    if (reciepientRequestDto.getRecepientDTO().getSmsaRamId() != null) {
+                        smsaRecepientTempService.deleteRecepientByEmpId(reciepientRequestDto.getRecepientDTO().getSmsaRamId());
+                        return ResponseEntity.ok("Delete Request Went for approval");
+                    }
+                    return ResponseEntity.ok("Id not found to delete");
+                case "APPROVED":
+                    String approved = smsaRecepientTempService.approveRejectRecepientData(reciepientRequestDto.getRecepientDTO(), "Approved");
+                    return ResponseEntity.ok(approved);
+                case "REJECTED":
+                    String rejected = smsaRecepientTempService.approveRejectRecepientData(reciepientRequestDto.getRecepientDTO(), "Rejected");
+                    return ResponseEntity.ok(rejected);
+                default:
+                    return ResponseEntity.badRequest().body("Invalid operationType: " + reciepientRequestDto.getOperation());
+            }
+        } catch (Exception e) {
+            log.error("Error occurred while processing recipient data", e);
+            return ResponseEntity.status(500).body("Internal Server Error: " + e.getMessage());
         }
     }
 
     @PostMapping("/threshold/actions")
     public ResponseEntity<?> thresholdData(@RequestBody ThresholdRequestDTO thresholdRequestDTO) {
-        switch (thresholdRequestDTO.getOperation().toUpperCase()) {
-            case "ADD":
-                String addMsg = smsaThresholdTempService.addThresholdTempData(thresholdRequestDTO.getThresholdDTO());
-                return ResponseEntity.ok(addMsg);
-            case "UPDATE":
-                String updateMsg = smsaThresholdTempService.updateThresholdData(thresholdRequestDTO.getThresholdDTO());
-
-                return ResponseEntity.ok(updateMsg);
-            case "DELETE":
-                if (thresholdRequestDTO.getThresholdDTO().getThresholdId() != null) {
-                    smsaRecepientTempService.deleteRecepientByEmpId(thresholdRequestDTO.getThresholdDTO().getThresholdId());
-                    return ResponseEntity.ok("Delete Request Went for approval");
-                }
-                return ResponseEntity.ok("Id not found to delete");
-            case "Approved":
-                String aproved = smsaThresholdTempService.approveRejectThresholdData(thresholdRequestDTO.getThresholdDTO(), "Approved");
-                return ResponseEntity.ok(aproved);
-            case "Rejected":
-                String rejected = smsaThresholdTempService.approveRejectThresholdData(thresholdRequestDTO.getThresholdDTO(), "Rejected");
-                return ResponseEntity.ok(rejected);
-            default:
-                return ResponseEntity.badRequest().body("Invalid operationType: " + thresholdRequestDTO.getOperation());
-
+        log.info("Received threshold operation: {}", thresholdRequestDTO.getOperation());
+        try {
+            switch (thresholdRequestDTO.getOperation().toUpperCase()) {
+                case "ADD":
+                    String addMsg = smsaThresholdTempService.addThresholdTempData(thresholdRequestDTO.getThresholdDTO());
+                    return ResponseEntity.ok(addMsg);
+                case "UPDATE":
+                    String updateMsg = smsaThresholdTempService.updateThresholdData(thresholdRequestDTO.getThresholdDTO());
+                    return ResponseEntity.ok(updateMsg);
+                case "DELETE":
+                    if (thresholdRequestDTO.getThresholdDTO().getThresholdId() != null) {
+                        smsaRecepientTempService.deleteRecepientByEmpId(thresholdRequestDTO.getThresholdDTO().getThresholdId());
+                        return ResponseEntity.ok("Delete Request Went for approval");
+                    }
+                    return ResponseEntity.ok("Id not found to delete");
+                case "APPROVED":
+                    String approved = smsaThresholdTempService.approveRejectThresholdData(thresholdRequestDTO.getThresholdDTO(), "Approved");
+                    return ResponseEntity.ok(approved);
+                case "REJECTED":
+                    String rejected = smsaThresholdTempService.approveRejectThresholdData(thresholdRequestDTO.getThresholdDTO(), "Rejected");
+                    return ResponseEntity.ok(rejected);
+                default:
+                    return ResponseEntity.badRequest().body("Invalid operationType: " + thresholdRequestDTO.getOperation());
+            }
+        } catch (Exception e) {
+            log.error("Error occurred while processing threshold data", e);
+            return ResponseEntity.status(500).body("Internal Server Error: " + e.getMessage());
         }
     }
 
     @PostMapping("/recepient/fetchRecepientTempData")
     public ResponseEntity<?> getRecepientTempData(@RequestBody Map<String, String> tokenMap) {
-
-        List<RecepientDTO> recepientTempData = smsaRecepientTempService.getRecepientTempData();
-
-        return ResponseEntity.ok(recepientTempData);
+        try {
+            List<RecepientDTO> recepientTempData = smsaRecepientTempService.getRecepientTempData();
+            return ResponseEntity.ok(recepientTempData);
+        } catch (Exception e) {
+            log.error("Error while fetching recepient temp data", e);
+            return ResponseEntity.status(500).body("Internal Server Error");
+        }
     }
 
     @PostMapping("/recepient/fetchRecepientMasterData")
     public ResponseEntity<?> getRecepientMasterData(@RequestBody Map<String, String> tokenMap) {
-
-        List<RecepientDTO> recepientMasterData = smsaRecepientMasterService.getRecepientMasterData();
-
-        return ResponseEntity.ok(recepientMasterData);
+        try {
+            List<RecepientDTO> recepientMasterData = smsaRecepientMasterService.getRecepientMasterData();
+            return ResponseEntity.ok(recepientMasterData);
+        } catch (Exception e) {
+            log.error("Error while fetching recepient master data", e);
+            return ResponseEntity.status(500).body("Internal Server Error");
+        }
     }
 
     @PostMapping("/threshold/fetchThresholdTempData")
     public ResponseEntity<?> getThresholdTempData(@RequestBody Map<String, String> tokenMap) {
-
-        List<ThresholdDTO> thresholdTempData = smsaThresholdTempService.getThresholdTempData();
-
-        return ResponseEntity.ok(thresholdTempData);
+        try {
+            List<ThresholdDTO> thresholdTempData = smsaThresholdTempService.getThresholdTempData();
+            return ResponseEntity.ok(thresholdTempData);
+        } catch (Exception e) {
+            log.error("Error while fetching threshold temp data", e);
+            return ResponseEntity.status(500).body("Internal Server Error");
+        }
     }
 
     @PostMapping("/threshold/fetchThresholdMasterData")
     public ResponseEntity<?> getThresholdMasterData(@RequestBody Map<String, String> tokenMap) {
-
-        List<ThresholdDTO> thresholdMasterData = smsaThresholdMasterService.getThresholdMasterData();
-
-        return ResponseEntity.ok(thresholdMasterData);
+        try {
+            List<ThresholdDTO> thresholdMasterData = smsaThresholdMasterService.getThresholdMasterData();
+            return ResponseEntity.ok(thresholdMasterData);
+        } catch (Exception e) {
+            log.error("Error while fetching threshold master data", e);
+            return ResponseEntity.status(500).body("Internal Server Error");
+        }
     }
 
     @GetMapping("/")
-    String getData() {
+    public String getData() {
         return "High Value Alerts Deployed Successfully";
     }
 
+    @PostMapping("/recipientSearch")
+    public ResponseEntity<?> searchRecp(@RequestBody ReceipientSearchRequest receipientSearchRequest,
+                                        @RequestParam(defaultValue = "0") int page,
+                                        @RequestParam(defaultValue = "10") int size) {
+        try {
+            Pageable pageable = PageRequest.of(page, size);
+            Page<RecepientDTO> data = smsaRecepientMasterService.getFilteredMessages(receipientSearchRequest.getRecepientFilterPojo(), pageable);
+            return ResponseEntity.ok(data);
+        } catch (Exception e) {
+            log.error("Error occurred during recipient search", e);
+            return ResponseEntity.status(500).body("Internal Server Error");
+        }
+    }
+
+    @PostMapping("/thresholdSearch")
+    public ResponseEntity<?> searchThreshold(@RequestBody ThresholdSearchRequest thresholdSearchRequest,
+                                             @RequestParam(defaultValue = "0") int page,
+                                             @RequestParam(defaultValue = "10") int size) {
+        try {
+            Pageable pageable = PageRequest.of(page, size);
+            Page<ThresholdDTO> data = smsaThresholdMasterService.getFilteredMessages(thresholdSearchRequest.getThresholdFilterPojo(), pageable);
+            return ResponseEntity.ok(data);
+        } catch (Exception e) {
+            log.error("Error occurred during threshold search", e);
+            return ResponseEntity.status(500).body("Internal Server Error");
+        }
+    }
 }
