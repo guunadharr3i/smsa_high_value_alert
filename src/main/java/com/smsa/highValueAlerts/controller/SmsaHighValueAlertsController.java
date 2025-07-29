@@ -96,7 +96,8 @@ public class SmsaHighValueAlertsController {
     @PostMapping("/recepient/fetchRecepientTempData")
     public ResponseEntity<?> getRecepientTempData(@RequestBody Map<String, String> tokenMap) {
         try {
-            List<RecepientDTO> recepientTempData = smsaRecepientTempService.getRecepientTempData();
+            String recEmpId = tokenMap.get("RecEmpId");
+            List<RecepientDTO> recepientTempData = smsaRecepientTempService.getRecepientTempData(recEmpId);
             return ResponseEntity.ok(recepientTempData);
         } catch (Exception e) {
             log.error("Error while fetching recepient temp data", e);
@@ -118,7 +119,8 @@ public class SmsaHighValueAlertsController {
     @PostMapping("/threshold/fetchThresholdTempData")
     public ResponseEntity<?> getThresholdTempData(@RequestBody Map<String, String> tokenMap) {
         try {
-            List<ThresholdDTO> thresholdTempData = smsaThresholdTempService.getThresholdTempData();
+            String recEmpId = tokenMap.get("RecEmpId");
+            List<ThresholdDTO> thresholdTempData = smsaThresholdTempService.getThresholdTempData(recEmpId);
             return ResponseEntity.ok(thresholdTempData);
         } catch (Exception e) {
             log.error("Error while fetching threshold temp data", e);
@@ -144,8 +146,8 @@ public class SmsaHighValueAlertsController {
 
     @PostMapping("/recipientSearch")
     public ResponseEntity<?> searchRecp(@RequestBody ReceipientSearchRequest receipientSearchRequest,
-                                        @RequestParam(defaultValue = "0") int page,
-                                        @RequestParam(defaultValue = "10") int size) {
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
         try {
             Pageable pageable = PageRequest.of(page, size);
             Page<RecepientDTO> data = smsaRecepientMasterService.getFilteredMessages(receipientSearchRequest.getRecepientFilterPojo(), pageable);
@@ -158,8 +160,8 @@ public class SmsaHighValueAlertsController {
 
     @PostMapping("/thresholdSearch")
     public ResponseEntity<?> searchThreshold(@RequestBody ThresholdSearchRequest thresholdSearchRequest,
-                                             @RequestParam(defaultValue = "0") int page,
-                                             @RequestParam(defaultValue = "10") int size) {
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
         try {
             Pageable pageable = PageRequest.of(page, size);
             Page<ThresholdDTO> data = smsaThresholdMasterService.getFilteredMessages(thresholdSearchRequest.getThresholdFilterPojo(), pageable);
@@ -169,4 +171,12 @@ public class SmsaHighValueAlertsController {
             return ResponseEntity.status(500).body("Internal Server Error");
         }
     }
+
+//    @PostMapping("/fetchUserData")
+//    public ResponseEntity<?> fetchUserData(@RequestBody String empId) {
+//        try {
+//        } catch (Exception e) {
+//            return ResponseEntity.status(500).body("Internal Server Error");
+//        }
+//    }
 }

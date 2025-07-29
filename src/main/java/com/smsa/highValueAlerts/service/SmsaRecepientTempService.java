@@ -32,39 +32,39 @@ public class SmsaRecepientTempService {
     public String addRecepientTempData(RecepientDTO recepientDTO) {
         try {
             logger.info("Checking if recipient exists in master or temp table.");
-            boolean existsInMs = recepientMasterRepo.existsBySmsaEmpIdAndSmsaGeoNameAndSmsaSenderBicAndSmsaMsgType(
-                    recepientDTO.getSmsaEmpId(),
-                    recepientDTO.getSmsaGeoName(),
-                    recepientDTO.getSmsaSenderBic(),
-                    recepientDTO.getSmsaMsgType()
+            boolean existsInMs = recepientMasterRepo.existsByRecEmpIdAndRecGeoNameAndRecSenderBicAndRecMsgType(
+                    recepientDTO.getRecCCEmpId(),
+                    recepientDTO.getRecGeoName(),
+                    recepientDTO.getRecSenderBic(),
+                    recepientDTO.getRecMsgType()
             );
 
             if (existsInMs) {
                 logger.warn("Recipient already exists in master table: {}", recepientDTO);
                 return String.format(
                         "Recipient already exists in masterTable with EmpId = '%s', GeoName = '%s', SenderBIC = '%s', MsgType = '%s'.",
-                        recepientDTO.getSmsaEmpId(),
-                        recepientDTO.getSmsaGeoName(),
-                        recepientDTO.getSmsaSenderBic(),
-                        recepientDTO.getSmsaMsgType()
+                        recepientDTO.getRecCCEmpId(),
+                        recepientDTO.getRecGeoName(),
+                        recepientDTO.getRecSenderBic(),
+                        recepientDTO.getRecMsgType()
                 );
             }
 
-            boolean existsTemp = recepientTempRepo.existsBySmsaEmpIdAndSmsaGeoNameAndSmsaSenderBicAndSmsaMsgType(
-                    recepientDTO.getSmsaEmpId(),
-                    recepientDTO.getSmsaGeoName(),
-                    recepientDTO.getSmsaSenderBic(),
-                    recepientDTO.getSmsaMsgType()
+            boolean existsTemp = recepientTempRepo.existsByRecEmpIdAndRecGeoNameAndRecSenderBicAndRecMsgType(
+                    recepientDTO.getRecCCEmpId(),
+                    recepientDTO.getRecGeoName(),
+                    recepientDTO.getRecSenderBic(),
+                    recepientDTO.getRecMsgType()
             );
 
             if (existsTemp) {
                 logger.warn("Recipient already exists in temp table: {}", recepientDTO);
                 return String.format(
                         "Recipient data already waiting for approval with EmpId = '%s', GeoName = '%s', SenderBIC = '%s', MsgType = '%s'.",
-                        recepientDTO.getSmsaEmpId(),
-                        recepientDTO.getSmsaGeoName(),
-                        recepientDTO.getSmsaSenderBic(),
-                        recepientDTO.getSmsaMsgType()
+                        recepientDTO.getRecCCEmpId(),
+                        recepientDTO.getRecGeoName(),
+                        recepientDTO.getRecSenderBic(),
+                        recepientDTO.getRecMsgType()
                 );
             }
 
@@ -81,17 +81,17 @@ public class SmsaRecepientTempService {
     public String updateRecieptData(RecepientDTO recepientDTO) {
         try {
             if (recepientDTO.getSmsaRamId() != null) {
-                boolean existsInMs = recepientMasterRepo.existsBySmsaEmpIdAndSmsaGeoNameAndSmsaSenderBicAndSmsaMsgType(
-                        recepientDTO.getSmsaEmpId(),
-                        recepientDTO.getSmsaGeoName(),
-                        recepientDTO.getSmsaSenderBic(),
-                        recepientDTO.getSmsaMsgType()
+                boolean existsInMs = recepientMasterRepo.existsByRecEmpIdAndRecGeoNameAndRecSenderBicAndRecMsgType(
+                        recepientDTO.getRecCCEmpId(),
+                        recepientDTO.getRecGeoName(),
+                        recepientDTO.getRecSenderBic(),
+                        recepientDTO.getRecMsgType()
                 );
-                boolean existsTemp = recepientTempRepo.existsBySmsaEmpIdAndSmsaGeoNameAndSmsaSenderBicAndSmsaMsgType(
-                        recepientDTO.getSmsaEmpId(),
-                        recepientDTO.getSmsaGeoName(),
-                        recepientDTO.getSmsaSenderBic(),
-                        recepientDTO.getSmsaMsgType()
+                boolean existsTemp = recepientTempRepo.existsByRecEmpIdAndRecGeoNameAndRecSenderBicAndRecMsgType(
+                        recepientDTO.getRecCCEmpId(),
+                        recepientDTO.getRecGeoName(),
+                        recepientDTO.getRecSenderBic(),
+                        recepientDTO.getRecMsgType()
                 );
 
                 if (existsInMs || existsTemp) {
@@ -131,6 +131,19 @@ public class SmsaRecepientTempService {
         }
     }
 
+    public List<RecepientDTO> getRecepientTempData(String recEmpId) {
+        try {
+            logger.info("Fetching all recipient temp data.");
+            List<SmsaRecepientTemp> data = recepientTempRepo.findByRecCreatedByNot(recEmpId);
+            List<RecepientDTO> pojoList = data.stream().map(this::mapToPojo).collect(Collectors.toList());
+            logger.info("Fetched {} records from recipient temp.", pojoList.size());
+            return pojoList;
+        } catch (Exception e) {
+            logger.error("Error fetching recipient temp data: {}", e.getMessage(), e);
+            return Arrays.asList();
+        }
+    }
+
     public List<RecepientDTO> getRecepientTempData() {
         try {
             logger.info("Fetching all recipient temp data.");
@@ -146,56 +159,83 @@ public class SmsaRecepientTempService {
 
     private RecepientDTO mapToPojo(SmsaRecepientTemp entity) {
         RecepientDTO pojo = new RecepientDTO();
-        pojo.setSmsaRamId(entity.getSmsaRamId());
-        pojo.setSmsaEmpId(entity.getSmsaEmpId());
-        pojo.setSmsaGeoName(entity.getSmsaGeoName());
-        pojo.setSmsaSenderBic(entity.getSmsaSenderBic());
-        pojo.setSmsaMsgType(entity.getSmsaMsgType());
-        pojo.setSmsaEmpName(entity.getSmsaEmpName());
-        pojo.setSmsaGrade(entity.getSmsaGrade());
-        pojo.setSmsaCreatedBy(entity.getSmsaCreatedBy());
-        pojo.setSmsaModifiedBy(entity.getSmsaModifiedBy());
-        pojo.setSmsaModifiedDate(entity.getSmsaModifiedDate());
-        pojo.setSmsaVerifiedBy(entity.getSmsaVerifiedBy());
-        pojo.setSmsaVerifiedDate(entity.getSmsaVerifiedDate());
-        pojo.setSmsaAction(entity.getSmsaAction());
+        try {
+            pojo.setSmsaRamId(entity.getSmsaRamId());
+            pojo.setRecEmpId(entity.getRecEmpId());
+            pojo.setRecEmailId(entity.getRecEmailId());
+            pojo.setRecEmpName(entity.getRecEmpName());
+            pojo.setRecGeoName(entity.getRecGeoName());
+            pojo.setRecSenderBic(entity.getRecSenderBic());
+            pojo.setRecMsgType(entity.getRecMsgType());
+            pojo.setRecGrade(entity.getRecGrade());
+            pojo.setRecCreatedBy(entity.getRecCreatedBy());
+            pojo.setRecCreatedDate(entity.getRecCreatedDate());
+            pojo.setRecModifiedBy(entity.getRecModifiedBy());
+            pojo.setRecModifiedDate(entity.getRecModifiedDate());
+            pojo.setRecVerifiedBy(entity.getRecVerifiedBy());
+            pojo.setRecVerifiedDate(entity.getRecVerifiedDate());
+            pojo.setRecCategory(entity.getRecCategory());
+            pojo.setRecCCEmpId(entity.getRecCCEmpId());
+            pojo.setRecCCMailId(entity.getRecCCMailId());
+            pojo.setSmsaRecOperation(entity.getSmsaRecOperation());
+        } catch (Exception e) {
+            logger.error("Error mapping entity to DTO: {}", e.getMessage(), e);
+        }
         return pojo;
     }
 
-    public SmsaRecepientTemp buildPojoToEntityCombo(RecepientDTO recepientDTO) {
-        SmsaRecepientTemp smsaRecepientTemp = new SmsaRecepientTemp();
-        smsaRecepientTemp.setSmsaRamId(recepientDTO.getSmsaRamId());
-        smsaRecepientTemp.setSmsaEmpId(recepientDTO.getSmsaEmpId());
-        smsaRecepientTemp.setSmsaGeoName(recepientDTO.getSmsaGeoName());
-        smsaRecepientTemp.setSmsaSenderBic(recepientDTO.getSmsaSenderBic());
-        smsaRecepientTemp.setSmsaMsgType(recepientDTO.getSmsaMsgType());
-        smsaRecepientTemp.setSmsaEmpName(recepientDTO.getSmsaEmpName());
-        smsaRecepientTemp.setSmsaGrade(recepientDTO.getSmsaGrade());
-        smsaRecepientTemp.setSmsaCreatedBy(recepientDTO.getSmsaCreatedBy());
-        smsaRecepientTemp.setSmsaModifiedBy(recepientDTO.getSmsaModifiedBy());
-        smsaRecepientTemp.setSmsaModifiedDate(recepientDTO.getSmsaModifiedDate());
-        smsaRecepientTemp.setSmsaVerifiedBy(recepientDTO.getSmsaVerifiedBy());
-        smsaRecepientTemp.setSmsaVerifiedDate(recepientDTO.getSmsaVerifiedDate());
-        smsaRecepientTemp.setSmsaAction(recepientDTO.getSmsaAction());
-        return smsaRecepientTemp;
+    public SmsaRecepientTemp buildPojoToEntityCombo(RecepientDTO entity) {
+        SmsaRecepientTemp pojo = new SmsaRecepientTemp();
+        try {
+            pojo.setSmsaRamId(entity.getSmsaRamId());
+            pojo.setRecEmpId(entity.getRecEmpId());
+            pojo.setRecEmailId(entity.getRecEmailId());
+            pojo.setRecEmpName(entity.getRecEmpName());
+            pojo.setRecGeoName(entity.getRecGeoName());
+            pojo.setRecSenderBic(entity.getRecSenderBic());
+            pojo.setRecMsgType(entity.getRecMsgType());
+            pojo.setRecGrade(entity.getRecGrade());
+            pojo.setRecCreatedBy(entity.getRecCreatedBy());
+            pojo.setRecCreatedDate(entity.getRecCreatedDate());
+            pojo.setRecModifiedBy(entity.getRecModifiedBy());
+            pojo.setRecModifiedDate(entity.getRecModifiedDate());
+            pojo.setRecVerifiedBy(entity.getRecVerifiedBy());
+            pojo.setRecVerifiedDate(entity.getRecVerifiedDate());
+            pojo.setRecCategory(entity.getRecCategory());
+            pojo.setRecCCEmpId(entity.getRecCCEmpId());
+            pojo.setRecCCMailId(entity.getRecCCMailId());
+            pojo.setSmsaRecOperation(entity.getSmsaRecOperation());
+        } catch (Exception e) {
+            logger.error("Error mapping entity to DTO: {}", e.getMessage(), e);
+        }
+        return pojo;
     }
 
-    public SmsaRecepientMaster buildTempToMaster(RecepientDTO recepientDTO) {
-        SmsaRecepientMaster smsaRecepientTemp = new SmsaRecepientMaster();
-        smsaRecepientTemp.setSmsaRamId(recepientDTO.getSmsaRamId());
-        smsaRecepientTemp.setSmsaEmpId(recepientDTO.getSmsaEmpId());
-        smsaRecepientTemp.setSmsaGeoName(recepientDTO.getSmsaGeoName());
-        smsaRecepientTemp.setSmsaSenderBic(recepientDTO.getSmsaSenderBic());
-        smsaRecepientTemp.setSmsaMsgType(recepientDTO.getSmsaMsgType());
-        smsaRecepientTemp.setSmsaEmpName(recepientDTO.getSmsaEmpName());
-        smsaRecepientTemp.setSmsaGrade(recepientDTO.getSmsaGrade());
-        smsaRecepientTemp.setSmsaCreatedBy(recepientDTO.getSmsaCreatedBy());
-        smsaRecepientTemp.setSmsaModifiedBy(recepientDTO.getSmsaModifiedBy());
-        smsaRecepientTemp.setSmsaModifiedDate(recepientDTO.getSmsaModifiedDate());
-        smsaRecepientTemp.setSmsaVerifiedBy(recepientDTO.getSmsaVerifiedBy());
-        smsaRecepientTemp.setSmsaVerifiedDate(recepientDTO.getSmsaVerifiedDate());
-        smsaRecepientTemp.setSmsaStatus("Active");
-        return smsaRecepientTemp;
+    public SmsaRecepientMaster buildTempToMaster(RecepientDTO entity) {
+        SmsaRecepientMaster pojo = new SmsaRecepientMaster();
+        try {
+            pojo.setSmsaRamId(entity.getSmsaRamId());
+            pojo.setRecEmpId(entity.getRecEmpId());
+            pojo.setRecEmailId(entity.getRecEmailId());
+            pojo.setRecEmpName(entity.getRecEmpName());
+            pojo.setRecGeoName(entity.getRecGeoName());
+            pojo.setRecSenderBic(entity.getRecSenderBic());
+            pojo.setRecMsgType(entity.getRecMsgType());
+            pojo.setRecGrade(entity.getRecGrade());
+            pojo.setRecCreatedBy(entity.getRecCreatedBy());
+            pojo.setRecCreatedDate(entity.getRecCreatedDate());
+            pojo.setRecModifiedBy(entity.getRecModifiedBy());
+            pojo.setRecModifiedDate(entity.getRecModifiedDate());
+            pojo.setRecVerifiedBy(entity.getRecVerifiedBy());
+            pojo.setRecVerifiedDate(entity.getRecVerifiedDate());
+            pojo.setRecCategory(entity.getRecCategory());
+            pojo.setRecCCEmpId(entity.getRecCCEmpId());
+            pojo.setRecCCMailId(entity.getRecCCMailId());
+            pojo.setSmsaRecStatus("Active");
+        } catch (Exception e) {
+            logger.error("Error mapping entity to DTO: {}", e.getMessage(), e);
+        }
+        return pojo;
     }
 
     public String approveRejectRecepientData(RecepientDTO recepientDTO, String action) {

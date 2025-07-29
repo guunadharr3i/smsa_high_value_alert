@@ -137,6 +137,20 @@ public class SmsaThresholdTempService {
             return null;
         }
     }
+     public List<ThresholdDTO> getThresholdTempData(String createdBy) {
+        logger.info("Fetching all threshold temp data");
+        try {
+            List<SmsaThresholdTemp> data = thresholdTempRepo.findByCreatedByNot(createdBy);
+            List<ThresholdDTO> pojoList = data.stream()
+                    .map(this::mapToPojo)
+                    .collect(Collectors.toList());
+            logger.info("Fetched {} threshold temp records", pojoList.size());
+            return pojoList;
+        } catch (Exception e) {
+            logger.error("Error fetching threshold temp data: {}", e.getMessage(), e);
+            return null;
+        }
+    }
 
     private ThresholdDTO mapToPojo(SmsaThresholdTemp entity) {
         ThresholdDTO pojo = new ThresholdDTO();

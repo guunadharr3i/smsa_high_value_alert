@@ -64,20 +64,20 @@ public class SmsaHighValueDownloadController {
 
     @PostMapping("/recepientDownload")
     public ResponseEntity<?> getReceipeientDownload(
-            @RequestBody String encryptedRequest,
+            @RequestBody FilterReceipientRequest filter,
             @RequestParam String downloadType) {
         logger.info("Inside GetFIltered messages method");
         logger.info("Selected downloadType: " + downloadType);
 
         try {
             // Step 1: Decrypt incoming payload
-            String decryptedJson = AESUtil.decrypt(encryptedRequest, secretKey, viKey);
-            logger.info("DecryptedJson: " + decryptedJson);
-            // Step 2: Convert decrypted JSON to FilterRequest
-            ObjectMapper mapper = new ObjectMapper();
-            mapper.registerModule(new JavaTimeModule());
-            mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-            FilterReceipientRequest filter = mapper.readValue(decryptedJson, FilterReceipientRequest.class);
+//            String decryptedJson = AESUtil.decrypt(encryptedRequest, secretKey, viKey);
+//            logger.info("DecryptedJson: " + decryptedJson);
+//            // Step 2: Convert decrypted JSON to FilterRequest
+//            ObjectMapper mapper = new ObjectMapper();
+//            mapper.registerModule(new JavaTimeModule());
+//            mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+//            FilterReceipientRequest filter = mapper.readValue(decryptedJson, FilterReceipientRequest.class);
             // Step 3: Authentication
 //            String accessToken = authenticateApi.validateAndRefreshToken(filter.getTokenMap());
 //            if (accessToken == null) {
@@ -107,26 +107,26 @@ public class SmsaHighValueDownloadController {
 
     @PostMapping("/thresholdDownload")
     public ResponseEntity<?> getThresholdDownload(
-            @RequestBody String encryptedRequest,
+            @RequestBody FilterThresholdRequest filter,
             @RequestParam String downloadType) {
         logger.info("Inside GetFIltered messages method");
         logger.info("Selected downloadType: " + downloadType);
 
         try {
-            // Step 1: Decrypt incoming payload
-            String decryptedJson = AESUtil.decrypt(encryptedRequest, secretKey, viKey);
-            logger.info("DecryptedJson: " + decryptedJson);
-            // Step 2: Convert decrypted JSON to FilterRequest
-            ObjectMapper mapper = new ObjectMapper();
-            mapper.registerModule(new JavaTimeModule());
-            mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-            FilterThresholdRequest filter = mapper.readValue(decryptedJson, FilterThresholdRequest.class);
-            // Step 3: Authentication
-            String accessToken = authenticateApi.validateAndRefreshToken(filter.getTokenMap());
-            if (accessToken == null) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                        .body(DownloadApiResponse.error(ApiResponseCode.INVALID_TOKEN));
-            }
+//            // Step 1: Decrypt incoming payload
+//            String decryptedJson = AESUtil.decrypt(encryptedRequest, secretKey, viKey);
+//            logger.info("DecryptedJson: " + decryptedJson);
+//            // Step 2: Convert decrypted JSON to FilterRequest
+//            ObjectMapper mapper = new ObjectMapper();
+//            mapper.registerModule(new JavaTimeModule());
+//            mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+//            FilterThresholdRequest filter = mapper.readValue(decryptedJson, FilterThresholdRequest.class);
+//            // Step 3: Authentication
+//            String accessToken = authenticateApi.validateAndRefreshToken(filter.getTokenMap());
+//            if (accessToken == null) {
+//                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+//                        .body(DownloadApiResponse.error(ApiResponseCode.INVALID_TOKEN));
+//            }
             switch (downloadType.toUpperCase()) {
                 case "TTCSV":
                     return selectedThresholdTempDataToCsv();

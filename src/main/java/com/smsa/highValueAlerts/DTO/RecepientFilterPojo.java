@@ -14,28 +14,24 @@ import java.util.List;
 public class RecepientFilterPojo {
 
     private List<Long> smsaRamId;
-
-    private List< String> smsaEmpId;
-
-    private List< String> smsaGeoName;
-
-    private List< String> smsaSenderBic;
-
-    private List< Long> smsaMsgType;
-
-    private List< String> smsaEmpName;
-
-    private List< String> smsaGrade;
-
-    private List< String> smsaCreatedBy;
-
-    private List< String> smsaModifiedBy;
-
-    private List< LocalDate> smsaModifiedDate;
-
-    private List< String> smsaVerifiedBy;
-
-    private List< LocalDate> smsaVerifiedDate;
+    private List<String> recEmpId;
+    private List<String> recEmailId;
+    private List<String> recEmpName;
+    private List<String> recGeoName;
+    private List<String> recSenderBic;
+    private List<String> recMsgType;
+    private List<String> recGrade;
+    private List<String> recCreatedBy;
+    private List<LocalDate> recCreatedDate;
+    private List<String> recModifiedBy;
+    private List<LocalDate> recModifiedDate;
+    private List<String> recVerifiedBy;
+    private List<LocalDate> recVerifiedDate;
+    private List<String> recCategory;
+    private List<String> recCCEmpId;
+    private List<String> recCCMailId;
+    private List<String> smsaRecOperation;
+    private List<String> smsaRecStatus;
 
     /**
      * @return the smsaRamId
@@ -52,156 +48,255 @@ public class RecepientFilterPojo {
     }
 
     /**
-     * @return the smsaEmpId
+     * @return the recEmpId
      */
-    public List< String> getSmsaEmpId() {
-        return smsaEmpId;
+    public List<String> getRecEmpId() {
+        return recEmpId;
     }
 
     /**
-     * @param smsaEmpId the smsaEmpId to set
+     * @param recEmpId the recEmpId to set
      */
-    public void setSmsaEmpId(List< String> smsaEmpId) {
-        this.smsaEmpId = smsaEmpId;
+    public void setRecEmpId(List<String> recEmpId) {
+        this.recEmpId = recEmpId;
     }
 
     /**
-     * @return the smsaGeoName
+     * @return the recEmailId
      */
-    public List< String> getSmsaGeoName() {
-        return smsaGeoName;
+    public List<String> getRecEmailId() {
+        return recEmailId;
     }
 
     /**
-     * @param smsaGeoName the smsaGeoName to set
+     * @param recEmailId the recEmailId to set
      */
-    public void setSmsaGeoName(List< String> smsaGeoName) {
-        this.smsaGeoName = smsaGeoName;
+    public void setRecEmailId(List<String> recEmailId) {
+        this.recEmailId = recEmailId;
     }
 
     /**
-     * @return the smsaSenderBic
+     * @return the recEmpName
      */
-    public List< String> getSmsaSenderBic() {
-        return smsaSenderBic;
+    public List<String> getRecEmpName() {
+        return recEmpName;
     }
 
     /**
-     * @param smsaSenderBic the smsaSenderBic to set
+     * @param recEmpName the recEmpName to set
      */
-    public void setSmsaSenderBic(List< String> smsaSenderBic) {
-        this.smsaSenderBic = smsaSenderBic;
+    public void setRecEmpName(List<String> recEmpName) {
+        this.recEmpName = recEmpName;
     }
 
     /**
-     * @return the smsaMsgType
+     * @return the recGeoName
      */
-    public List< Long> getSmsaMsgType() {
-        return smsaMsgType;
+    public List<String> getRecGeoName() {
+        return recGeoName;
     }
 
     /**
-     * @param smsaMsgType the smsaMsgType to set
+     * @param recGeoName the recGeoName to set
      */
-    public void setSmsaMsgType(List< Long> smsaMsgType) {
-        this.smsaMsgType = smsaMsgType;
+    public void setRecGeoName(List<String> recGeoName) {
+        this.recGeoName = recGeoName;
     }
 
     /**
-     * @return the smsaEmpName
+     * @return the recSenderBic
      */
-    public List< String> getSmsaEmpName() {
-        return smsaEmpName;
+    public List<String> getRecSenderBic() {
+        return recSenderBic;
     }
 
     /**
-     * @param smsaEmpName the smsaEmpName to set
+     * @param recSenderBic the recSenderBic to set
      */
-    public void setSmsaEmpName(List< String> smsaEmpName) {
-        this.smsaEmpName = smsaEmpName;
+    public void setRecSenderBic(List<String> recSenderBic) {
+        this.recSenderBic = recSenderBic;
     }
 
     /**
-     * @return the smsaGrade
+     * @return the recMsgType
      */
-    public List< String> getSmsaGrade() {
-        return smsaGrade;
+    public List<String> getRecMsgType() {
+        return recMsgType;
     }
 
     /**
-     * @param smsaGrade the smsaGrade to set
+     * @param recMsgType the recMsgType to set
      */
-    public void setSmsaGrade(List< String> smsaGrade) {
-        this.smsaGrade = smsaGrade;
+    public void setRecMsgType(List<String> recMsgType) {
+        this.recMsgType = recMsgType;
     }
 
     /**
-     * @return the smsaCreatedBy
+     * @return the recGrade
      */
-    public List< String> getSmsaCreatedBy() {
-        return smsaCreatedBy;
+    public List<String> getRecGrade() {
+        return recGrade;
     }
 
     /**
-     * @param smsaCreatedBy the smsaCreatedBy to set
+     * @param recGrade the recGrade to set
      */
-    public void setSmsaCreatedBy(List< String> smsaCreatedBy) {
-        this.smsaCreatedBy = smsaCreatedBy;
+    public void setRecGrade(List<String> recGrade) {
+        this.recGrade = recGrade;
     }
 
     /**
-     * @return the smsaModifiedBy
+     * @return the recCreatedBy
      */
-    public List< String> getSmsaModifiedBy() {
-        return smsaModifiedBy;
+    public List<String> getRecCreatedBy() {
+        return recCreatedBy;
     }
 
     /**
-     * @param smsaModifiedBy the smsaModifiedBy to set
+     * @param recCreatedBy the recCreatedBy to set
      */
-    public void setSmsaModifiedBy(List< String> smsaModifiedBy) {
-        this.smsaModifiedBy = smsaModifiedBy;
+    public void setRecCreatedBy(List<String> recCreatedBy) {
+        this.recCreatedBy = recCreatedBy;
     }
 
     /**
-     * @return the smsaModifiedDate
+     * @return the recCreatedDate
      */
-    public List< LocalDate> getSmsaModifiedDate() {
-        return smsaModifiedDate;
+    public List<LocalDate> getRecCreatedDate() {
+        return recCreatedDate;
     }
 
     /**
-     * @param smsaModifiedDate the smsaModifiedDate to set
+     * @param recCreatedDate the recCreatedDate to set
      */
-    public void setSmsaModifiedDate(List< LocalDate> smsaModifiedDate) {
-        this.smsaModifiedDate = smsaModifiedDate;
+    public void setRecCreatedDate(List<LocalDate> recCreatedDate) {
+        this.recCreatedDate = recCreatedDate;
     }
 
     /**
-     * @return the smsaVerifiedBy
+     * @return the recModifiedBy
      */
-    public List< String> getSmsaVerifiedBy() {
-        return smsaVerifiedBy;
+    public List<String> getRecModifiedBy() {
+        return recModifiedBy;
     }
 
     /**
-     * @param smsaVerifiedBy the smsaVerifiedBy to set
+     * @param recModifiedBy the recModifiedBy to set
      */
-    public void setSmsaVerifiedBy(List< String> smsaVerifiedBy) {
-        this.smsaVerifiedBy = smsaVerifiedBy;
+    public void setRecModifiedBy(List<String> recModifiedBy) {
+        this.recModifiedBy = recModifiedBy;
     }
 
     /**
-     * @return the smsaVerifiedDate
+     * @return the recModifiedDate
      */
-    public List< LocalDate> getSmsaVerifiedDate() {
-        return smsaVerifiedDate;
+    public List<LocalDate> getRecModifiedDate() {
+        return recModifiedDate;
     }
 
     /**
-     * @param smsaVerifiedDate the smsaVerifiedDate to set
+     * @param recModifiedDate the recModifiedDate to set
      */
-    public void setSmsaVerifiedDate(List< LocalDate> smsaVerifiedDate) {
-        this.smsaVerifiedDate = smsaVerifiedDate;
+    public void setRecModifiedDate(List<LocalDate> recModifiedDate) {
+        this.recModifiedDate = recModifiedDate;
     }
+
+    /**
+     * @return the recVerifiedBy
+     */
+    public List<String> getRecVerifiedBy() {
+        return recVerifiedBy;
+    }
+
+    /**
+     * @param recVerifiedBy the recVerifiedBy to set
+     */
+    public void setRecVerifiedBy(List<String> recVerifiedBy) {
+        this.recVerifiedBy = recVerifiedBy;
+    }
+
+    /**
+     * @return the recVerifiedDate
+     */
+    public List<LocalDate> getRecVerifiedDate() {
+        return recVerifiedDate;
+    }
+
+    /**
+     * @param recVerifiedDate the recVerifiedDate to set
+     */
+    public void setRecVerifiedDate(List<LocalDate> recVerifiedDate) {
+        this.recVerifiedDate = recVerifiedDate;
+    }
+
+    /**
+     * @return the recCategory
+     */
+    public List<String> getRecCategory() {
+        return recCategory;
+    }
+
+    /**
+     * @param recCategory the recCategory to set
+     */
+    public void setRecCategory(List<String> recCategory) {
+        this.recCategory = recCategory;
+    }
+
+    /**
+     * @return the recCCEmpId
+     */
+    public List<String> getRecCCEmpId() {
+        return recCCEmpId;
+    }
+
+    /**
+     * @param recCCEmpId the recCCEmpId to set
+     */
+    public void setRecCCEmpId(List<String> recCCEmpId) {
+        this.recCCEmpId = recCCEmpId;
+    }
+
+    /**
+     * @return the recCCMailId
+     */
+    public List<String> getRecCCMailId() {
+        return recCCMailId;
+    }
+
+    /**
+     * @param recCCMailId the recCCMailId to set
+     */
+    public void setRecCCMailId(List<String> recCCMailId) {
+        this.recCCMailId = recCCMailId;
+    }
+
+    /**
+     * @return the smsaRecOperation
+     */
+    public List<String> getSmsaRecOperation() {
+        return smsaRecOperation;
+    }
+
+    /**
+     * @param smsaRecOperation the smsaRecOperation to set
+     */
+    public void setSmsaRecOperation(List<String> smsaRecOperation) {
+        this.smsaRecOperation = smsaRecOperation;
+    }
+
+    /**
+     * @return the smsaRecStatus
+     */
+    public List<String> getSmsaRecStatus() {
+        return smsaRecStatus;
+    }
+
+    /**
+     * @param smsaRecStatus the smsaRecStatus to set
+     */
+    public void setSmsaRecStatus(List<String> smsaRecStatus) {
+        this.smsaRecStatus = smsaRecStatus;
+    }
+
 }

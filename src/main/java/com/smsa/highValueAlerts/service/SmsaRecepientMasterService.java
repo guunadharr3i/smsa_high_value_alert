@@ -228,26 +228,32 @@ public class SmsaRecepientMasterService {
         return pojoList;
     }
 
-    private RecepientDTO mapToPojo(SmsaRecepientMaster entity) {
-        RecepientDTO pojo = new RecepientDTO();
-        try {
-            pojo.setSmsaRamId(entity.getSmsaRamId());
-            pojo.setSmsaEmpId(entity.getSmsaEmpId());
-            pojo.setSmsaGeoName(entity.getSmsaGeoName());
-            pojo.setSmsaSenderBic(entity.getSmsaSenderBic());
-            pojo.setSmsaMsgType(entity.getSmsaMsgType());
-            pojo.setSmsaEmpName(entity.getSmsaEmpName());
-            pojo.setSmsaGrade(entity.getSmsaGrade());
-            pojo.setSmsaCreatedBy(entity.getSmsaCreatedBy());
-            pojo.setSmsaModifiedBy(entity.getSmsaModifiedBy());
-            pojo.setSmsaModifiedDate(entity.getSmsaModifiedDate());
-            pojo.setSmsaVerifiedBy(entity.getSmsaVerifiedBy());
-            pojo.setSmsaVerifiedDate(entity.getSmsaVerifiedDate());
-        } catch (Exception e) {
-            logger.error("Error mapping entity to DTO: {}", e.getMessage(), e);
-        }
-        return pojo;
+   private RecepientDTO mapToPojo(SmsaRecepientMaster entity) {
+    RecepientDTO pojo = new RecepientDTO();
+    try {
+        pojo.setSmsaRamId(entity.getSmsaRamId());
+        pojo.setRecEmpId(entity.getRecEmpId());
+        pojo.setRecEmailId(entity.getRecEmailId());
+        pojo.setRecEmpName(entity.getRecEmpName());
+        pojo.setRecGeoName(entity.getRecGeoName());
+        pojo.setRecSenderBic(entity.getRecSenderBic());
+        pojo.setRecMsgType(entity.getRecMsgType());
+        pojo.setRecGrade(entity.getRecGrade());
+        pojo.setRecCreatedBy(entity.getRecCreatedBy());
+        pojo.setRecCreatedDate(entity.getRecCreatedDate());
+        pojo.setRecModifiedBy(entity.getRecModifiedBy());
+        pojo.setRecModifiedDate(entity.getRecModifiedDate());
+        pojo.setRecVerifiedBy(entity.getRecVerifiedBy());
+        pojo.setRecVerifiedDate(entity.getRecVerifiedDate());
+        pojo.setRecCategory(entity.getRecCategory());
+        pojo.setRecCCEmpId(entity.getRecCCEmpId());
+        pojo.setRecCCMailId(entity.getRecCCMailId());
+        pojo.setSmsaRecStatus(entity.getSmsaRecStatus());
+    } catch (Exception e) {
+        logger.error("Error mapping entity to DTO: {}", e.getMessage(), e);
     }
+    return pojo;
+}
 
     private String escapeLike(String param) {
         return param.replace("\\", "\\\\")

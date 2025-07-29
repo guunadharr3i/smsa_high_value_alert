@@ -10,151 +10,317 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "SMSA_RECEPIENT_MASTER")
-public class SmsaRecepientMaster implements Serializable{
+public class SmsaRecepientMaster implements Serializable {
 
     @Id
     @Column(name = "SMSA_RAM_ID", nullable = false)
     private Long smsaRamId;
 
-    @Column(name = "SMSA_EMP_ID", length = 10)
-    private String smsaEmpId;
+    @Column(name = "SMSA_REC_EMP_ID", length = 10)
+    private String recEmpId;
 
-    @Column(name = "SMSA_GEO_NAME", length = 20)
-    private String smsaGeoName;
+    @Column(name = "SMSA_REC_EMAIL_ID")
+    private String recEmailId;
 
-    @Column(name = "SMSA_SENDER_BIC", length = 20)
-    private String smsaSenderBic;
+    @Column(name = "SMSA_REC_EMP_NAME", length = 150)
+    private String recEmpName;
 
-    @Column(name = "SMSA_MSG_TYPE")
-    private Long smsaMsgType;
+    @Column(name = "SMSA_REC_GEO_NAME", length = 20)
+    private String recGeoName;
 
-    @Column(name = "SMSA_EMP_NAME", length = 150)
-    private String smsaEmpName;
+    @Column(name = "SMSA_REC_SENDER_BIC", length = 20)
+    private String recSenderBic;
 
-    @Column(name = "SMSA_GRADE", length = 10)
-    private String smsaGrade;
+    @Column(name = "SMSA_REC_MSG_TYPE")
+    private String recMsgType;
 
-    @Column(name = "SMSA_CREATED_BY", length = 10)
-    private String smsaCreatedBy;
+    @Column(name = "SMSA_REC_GRADE", length = 10)
+    private String recGrade;
 
-    @Column(name = "SMSA_MODIFIED_BY", length = 10)
-    private String smsaModifiedBy;
+    @Column(name = "SMSA_REC_CREATED_BY", length = 10)
+    private String recCreatedBy;
+    @Column(name = "SMSA_REC_CREATED_DATE")
+    private LocalDate recCreatedDate;
 
-    @Column(name = "SMSA_MODIFIED_DATE")
-    private LocalDate smsaModifiedDate;
+    @Column(name = "SMSA_REC_MODIFIED_BY", length = 10)
+    private String recModifiedBy;
 
-    @Column(name = "SMSA_VERIFIED_BY", length = 10)
-    private String smsaVerifiedBy;
+    @Column(name = "SMSA_REC_MODIFIED_DATE")
+    private LocalDate recModifiedDate;
 
-    @Column(name = "SMSA_VERIFIED_DATE")
-    private LocalDate smsaVerifiedDate;
+    @Column(name = "SMSA_REC_VERIFIED_BY", length = 10)
+    private String recVerifiedBy;
 
-    @Column(name = "SMSA_STATUS", length = 10)
-    private String smsaStatus;
+    @Column(name = "SMSA_REC_VERIFIED_DATE")
+    private LocalDate recVerifiedDate;
+
+    @Column(name = "SMSA_REC_CATEGORY")
+    private String recCategory;
+
+    @Column(name = "SMSA_REC_CC_EMPID")
+    private String recCCEmpId;
+
+    @Column(name = "SMSA_REC_CC_MAILID")
+    private String recCCMailId;
+
+    @Column(name = "SMSA_REC_STATUS", length = 10)
+    private String smsaRecStatus;
 
     // Getters and Setters
-
+    /**
+     * @return the smsaRamId
+     */
     public Long getSmsaRamId() {
         return smsaRamId;
     }
 
+    /**
+     * @param smsaRamId the smsaRamId to set
+     */
     public void setSmsaRamId(Long smsaRamId) {
         this.smsaRamId = smsaRamId;
     }
 
-    public String getSmsaEmpId() {
-        return smsaEmpId;
+    /**
+     * @return the recEmpId
+     */
+    public String getRecEmpId() {
+        return recEmpId;
     }
 
-    public void setSmsaEmpId(String smsaEmpId) {
-        this.smsaEmpId = smsaEmpId;
+    /**
+     * @param recEmpId the recEmpId to set
+     */
+    public void setRecEmpId(String recEmpId) {
+        this.recEmpId = recEmpId;
     }
 
-    public String getSmsaGeoName() {
-        return smsaGeoName;
+    /**
+     * @return the recEmailId
+     */
+    public String getRecEmailId() {
+        return recEmailId;
     }
 
-    public void setSmsaGeoName(String smsaGeoName) {
-        this.smsaGeoName = smsaGeoName;
+    /**
+     * @param recEmailId the recEmailId to set
+     */
+    public void setRecEmailId(String recEmailId) {
+        this.recEmailId = recEmailId;
     }
 
-    public String getSmsaSenderBic() {
-        return smsaSenderBic;
+    /**
+     * @return the recEmpName
+     */
+    public String getRecEmpName() {
+        return recEmpName;
     }
 
-    public void setSmsaSenderBic(String smsaSenderBic) {
-        this.smsaSenderBic = smsaSenderBic;
+    /**
+     * @param recEmpName the recEmpName to set
+     */
+    public void setRecEmpName(String recEmpName) {
+        this.recEmpName = recEmpName;
     }
 
-    public Long getSmsaMsgType() {
-        return smsaMsgType;
+    /**
+     * @return the recGeoName
+     */
+    public String getRecGeoName() {
+        return recGeoName;
     }
 
-    public void setSmsaMsgType(Long smsaMsgType) {
-        this.smsaMsgType = smsaMsgType;
+    /**
+     * @param recGeoName the recGeoName to set
+     */
+    public void setRecGeoName(String recGeoName) {
+        this.recGeoName = recGeoName;
     }
 
-    public String getSmsaEmpName() {
-        return smsaEmpName;
+    /**
+     * @return the recSenderBic
+     */
+    public String getRecSenderBic() {
+        return recSenderBic;
     }
 
-    public void setSmsaEmpName(String smsaEmpName) {
-        this.smsaEmpName = smsaEmpName;
+    /**
+     * @param recSenderBic the recSenderBic to set
+     */
+    public void setRecSenderBic(String recSenderBic) {
+        this.recSenderBic = recSenderBic;
     }
 
-    public String getSmsaGrade() {
-        return smsaGrade;
+    /**
+     * @return the recMsgType
+     */
+    public String getRecMsgType() {
+        return recMsgType;
     }
 
-    public void setSmsaGrade(String smsaGrade) {
-        this.smsaGrade = smsaGrade;
+    /**
+     * @param recMsgType the recMsgType to set
+     */
+    public void setRecMsgType(String recMsgType) {
+        this.recMsgType = recMsgType;
     }
 
-    public String getSmsaCreatedBy() {
-        return smsaCreatedBy;
+    /**
+     * @return the recGrade
+     */
+    public String getRecGrade() {
+        return recGrade;
     }
 
-    public void setSmsaCreatedBy(String smsaCreatedBy) {
-        this.smsaCreatedBy = smsaCreatedBy;
+    /**
+     * @param recGrade the recGrade to set
+     */
+    public void setRecGrade(String recGrade) {
+        this.recGrade = recGrade;
     }
 
-    public String getSmsaModifiedBy() {
-        return smsaModifiedBy;
+    /**
+     * @return the recCreatedBy
+     */
+    public String getRecCreatedBy() {
+        return recCreatedBy;
     }
 
-    public void setSmsaModifiedBy(String smsaModifiedBy) {
-        this.smsaModifiedBy = smsaModifiedBy;
+    /**
+     * @param recCreatedBy the recCreatedBy to set
+     */
+    public void setRecCreatedBy(String recCreatedBy) {
+        this.recCreatedBy = recCreatedBy;
     }
 
-    public LocalDate getSmsaModifiedDate() {
-        return smsaModifiedDate;
+    /**
+     * @return the recCreatedDate
+     */
+    public LocalDate getRecCreatedDate() {
+        return recCreatedDate;
     }
 
-    public void setSmsaModifiedDate(LocalDate smsaModifiedDate) {
-        this.smsaModifiedDate = smsaModifiedDate;
+    /**
+     * @param recCreatedDate the recCreatedDate to set
+     */
+    public void setRecCreatedDate(LocalDate recCreatedDate) {
+        this.recCreatedDate = recCreatedDate;
     }
 
-    public String getSmsaVerifiedBy() {
-        return smsaVerifiedBy;
+    /**
+     * @return the recModifiedBy
+     */
+    public String getRecModifiedBy() {
+        return recModifiedBy;
     }
 
-    public void setSmsaVerifiedBy(String smsaVerifiedBy) {
-        this.smsaVerifiedBy = smsaVerifiedBy;
+    /**
+     * @param recModifiedBy the recModifiedBy to set
+     */
+    public void setRecModifiedBy(String recModifiedBy) {
+        this.recModifiedBy = recModifiedBy;
     }
 
-    public LocalDate getSmsaVerifiedDate() {
-        return smsaVerifiedDate;
+    /**
+     * @return the recModifiedDate
+     */
+    public LocalDate getRecModifiedDate() {
+        return recModifiedDate;
     }
 
-    public void setSmsaVerifiedDate(LocalDate smsaVerifiedDate) {
-        this.smsaVerifiedDate = smsaVerifiedDate;
+    /**
+     * @param recModifiedDate the recModifiedDate to set
+     */
+    public void setRecModifiedDate(LocalDate recModifiedDate) {
+        this.recModifiedDate = recModifiedDate;
     }
 
-    public String getSmsaStatus() {
-        return smsaStatus;
+    /**
+     * @return the recVerifiedBy
+     */
+    public String getRecVerifiedBy() {
+        return recVerifiedBy;
     }
 
-    public void setSmsaStatus(String smsaStatus) {
-        this.smsaStatus = smsaStatus;
+    /**
+     * @param recVerifiedBy the recVerifiedBy to set
+     */
+    public void setRecVerifiedBy(String recVerifiedBy) {
+        this.recVerifiedBy = recVerifiedBy;
     }
+
+    /**
+     * @return the recVerifiedDate
+     */
+    public LocalDate getRecVerifiedDate() {
+        return recVerifiedDate;
+    }
+
+    /**
+     * @param recVerifiedDate the recVerifiedDate to set
+     */
+    public void setRecVerifiedDate(LocalDate recVerifiedDate) {
+        this.recVerifiedDate = recVerifiedDate;
+    }
+
+    /**
+     * @return the recCategory
+     */
+    public String getRecCategory() {
+        return recCategory;
+    }
+
+    /**
+     * @param recCategory the recCategory to set
+     */
+    public void setRecCategory(String recCategory) {
+        this.recCategory = recCategory;
+    }
+
+    /**
+     * @return the recCCEmpId
+     */
+    public String getRecCCEmpId() {
+        return recCCEmpId;
+    }
+
+    /**
+     * @param recCCEmpId the recCCEmpId to set
+     */
+    public void setRecCCEmpId(String recCCEmpId) {
+        this.recCCEmpId = recCCEmpId;
+    }
+
+    /**
+     * @return the recCCMailId
+     */
+    public String getRecCCMailId() {
+        return recCCMailId;
+    }
+
+    /**
+     * @param recCCMailId the recCCMailId to set
+     */
+    public void setRecCCMailId(String recCCMailId) {
+        this.recCCMailId = recCCMailId;
+    }
+
+    /**
+     * @return the smsaRecStatus
+     */
+    public String getSmsaRecStatus() {
+        return smsaRecStatus;
+    }
+
+    /**
+     * @param smsaRecStatus the smsaRecStatus to set
+     */
+    public void setSmsaRecStatus(String smsaRecStatus) {
+        this.smsaRecStatus = smsaRecStatus;
+    }
+
+   
+
+   
+
 }

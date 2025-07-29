@@ -27,8 +27,9 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class MasterXlsDownloadService {
+
     private static final Logger log = LogManager.getLogger(MasterXlsDownloadService.class);
-    
+
     @Autowired
     SmsaRecepientMasterService smsaRecepientMasterService;
 
@@ -69,9 +70,10 @@ public class MasterXlsDownloadService {
     // ---------- helpers -----------------------------------------------------
     private void createHeaderRow(Sheet sheet) {
         String[] headers = {
-            "EmpId", "GeoName", "SenderBic", "MsgType", "EmpName",
-                "Grade",
-                "Created By", "Modified By", "Modified Date", "Verified By", "Verified Date"
+            "SMSA_REC_EMP_ID", "SMSA_REC_EMAIL_ID", "SMSA_REC_EMP_NAME", "SMSA_REC_GEO_NAME", "SMSA_REC_SENDER_BIC",
+            "SMSA_REC_MSG_TYPE", "SMSA_REC_GRADE", "SMSA_REC_CREATED_BY", "SMSA_REC_CREATED_DATE", "SMSA_REC_MODIFIED_BY",
+            "SMSA_REC_MODIFIED_DATE", "SMSA_REC_VERIFIED_BY", "SMSA_REC_VERIFIED_DATE", "SMSA_REC_CATEGORY", "SMSA_REC_CC_EMPID",
+            "SMSA_REC_CC_MAIL_ID", "SMSA_REC_STATUS"
         };
         Row headerRow = sheet.createRow(0);
         for (int i = 0; i < headers.length; i++) {
@@ -80,20 +82,26 @@ public class MasterXlsDownloadService {
     }
 
     private void populateSheetRow(Row row, RecepientDTO h) {
-        row.createCell(0).setCellValue(safe(h.getSmsaEmpId()));
-        row.createCell(1).setCellValue(safe(h.getSmsaGeoName()));
-        row.createCell(2).setCellValue(safe(h.getSmsaSenderBic()));
-        row.createCell(3).setCellValue(safe(h.getSmsaMsgType()));
-        row.createCell(4).setCellValue(safe(h.getSmsaEmpName()));
-        row.createCell(6).setCellValue(safe(h.getSmsaGrade()));
-        row.createCell(7).setCellValue(safe(h.getSmsaCreatedBy()));
-        row.createCell(8).setCellValue(safe(h.getSmsaModifiedBy()));
-        row.createCell(9).setCellValue(safe(h.getSmsaModifiedDate()));
-        row.createCell(10).setCellValue(safe(h.getSmsaVerifiedBy()));
-        row.createCell(11).setCellValue(safe(h.getSmsaVerifiedDate()));
+        row.createCell(0).setCellValue(safe(h.getRecEmpId()));
+        row.createCell(1).setCellValue(safe(h.getRecEmailId()));
+        row.createCell(2).setCellValue(safe(h.getRecEmpName()));
+        row.createCell(3).setCellValue(safe(h.getRecGeoName()));
+        row.createCell(4).setCellValue(safe(h.getRecSenderBic()));
+        row.createCell(6).setCellValue(safe(h.getRecMsgType()));
+        row.createCell(7).setCellValue(safe(h.getRecGrade()));
+        row.createCell(8).setCellValue(safe(h.getRecCreatedBy()));
+        row.createCell(9).setCellValue(safe(h.getRecCreatedDate()));
+        row.createCell(10).setCellValue(safe(h.getRecModifiedBy()));
+        row.createCell(11).setCellValue(safe(h.getRecModifiedDate()));
+        row.createCell(12).setCellValue(safe(h.getRecVerifiedBy()));
+        row.createCell(13).setCellValue(safe(h.getRecVerifiedDate()));
+        row.createCell(14).setCellValue(safe(h.getRecCategory()));
+        row.createCell(15).setCellValue(safe(h.getRecCCEmpId()));
+        row.createCell(16).setCellValue(safe(h.getRecCCMailId()));
+        row.createCell(17).setCellValue(safe(h.getSmsaRecStatus()));
     }
 
-   //  download XL for Threshold Master Data
+    //  download XL for Threshold Master Data
     public byte[] exportThresholdDataSingleExcel(ThresholdFilterPojo filters) throws IOException {
         log.info("Starting SwiftThresholdMessageHeader single Excel export...");
 
@@ -129,8 +137,8 @@ public class MasterXlsDownloadService {
     private void createThresholdHeaderRow(Sheet sheet) {
         String[] headers = {
             "Threshold Id", "Msg Currency", "SenderBic", "MsgType", "Category A From Amount",
-                "Category A To Amount",
-                "category B From Amount", "Category B To Amount", "createdBy", "createdDate", "Modified By", "Modified Date", "Verified By", "Verified Date"
+            "Category A To Amount",
+            "category B From Amount", "Category B To Amount", "createdBy", "createdDate", "Modified By", "Modified Date", "Verified By", "Verified Date"
         };
         Row headerRow = sheet.createRow(0);
         for (int i = 0; i < headers.length; i++) {

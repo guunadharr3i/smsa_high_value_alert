@@ -40,26 +40,33 @@ public class MasterCsvDownloadService {
 
             // Write Header Row
             writer.write(String.join(",", new String[]{
-                "EmpId", "GeoName", "SenderBic", "MsgType", "EmpName",
-                "Grade",
-                "Created By", "Modified By", "Modified Date", "Verified By", "Verified Date"
+                "SMSA_REC_EMP_ID", "SMSA_REC_EMAIL_ID", "SMSA_REC_EMP_NAME", "SMSA_REC_GEO_NAME", "SMSA_REC_SENDER_BIC",
+                "SMSA_REC_MSG_TYPE","SMSA_REC_GRADE","SMSA_REC_CREATED_BY","SMSA_REC_CREATED_DATE","SMSA_REC_MODIFIED_BY",
+                "SMSA_REC_MODIFIED_DATE", "SMSA_REC_VERIFIED_BY", "SMSA_REC_VERIFIED_DATE", "SMSA_REC_CATEGORY", "SMSA_REC_CC_EMPID",
+                "SMSA_REC_CC_MAIL_ID","SMSA_REC_STATUS"
             }));
             writer.write("\n");
 
             // Write Data Rows
             for (RecepientDTO h : headers) {
                 String[] row = new String[]{
-                    safe(h.getSmsaEmpId()),
-                    safe(h.getSmsaGeoName()),
-                    safe(h.getSmsaSenderBic()),
-                    safe(h.getSmsaMsgType()),
-                    safe(h.getSmsaEmpName()),
-                    safe(h.getSmsaGrade()),
-                    safe(h.getSmsaCreatedBy()),
-                    safe(h.getSmsaModifiedBy()),
-                    safe(h.getSmsaModifiedDate()),
-                    safe(h.getSmsaVerifiedBy()),
-                    safe(h.getSmsaVerifiedDate())
+                    safe(h.getRecEmpId()),
+                    safe(h.getRecEmailId()),
+                    safe(h.getRecEmpName()),
+                    safe(h.getRecGeoName()),
+                    safe(h.getRecSenderBic()),
+                    safe(h.getRecMsgType()),
+                    safe(h.getRecGrade()),
+                    safe(h.getRecCreatedBy()),
+                    safe(h.getRecCreatedDate()),
+                    safe(h.getRecModifiedBy()),
+                    safe(h.getRecModifiedDate()),
+                    safe(h.getRecVerifiedBy()),
+                    safe(h.getRecVerifiedDate()),
+                    safe(h.getRecCategory()),
+                    safe(h.getRecCCEmpId()),
+                    safe(h.getRecCCMailId()),
+                    safe(h.getSmsaRecStatus())
                 };
                 writer.write(String.join(",", escapeCsv(row)));
                 writer.write("\n");
