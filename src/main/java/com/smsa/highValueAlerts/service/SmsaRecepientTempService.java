@@ -1,5 +1,7 @@
 package com.smsa.highValueAlerts.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,20 +83,9 @@ public class SmsaRecepientTempService {
     public String updateRecieptData(RecepientDTO recepientDTO) {
         try {
             if (recepientDTO.getSmsaRamId() != null) {
-                boolean existsInMs = recepientMasterRepo.existsByRecEmpIdAndRecGeoNameAndRecSenderBicAndRecMsgType(
-                        recepientDTO.getRecCCEmpId(),
-                        recepientDTO.getRecGeoName(),
-                        recepientDTO.getRecSenderBic(),
-                        recepientDTO.getRecMsgType()
-                );
-                boolean existsTemp = recepientTempRepo.existsByRecEmpIdAndRecGeoNameAndRecSenderBicAndRecMsgType(
-                        recepientDTO.getRecCCEmpId(),
-                        recepientDTO.getRecGeoName(),
-                        recepientDTO.getRecSenderBic(),
-                        recepientDTO.getRecMsgType()
-                );
+                Optional<SmsaRecepientMaster> existsInMs = recepientMasterRepo.findById(recepientDTO.getSmsaRamId());
 
-                if (existsInMs || existsTemp) {
+                if (existsInMs.isPresent()) {
                     SmsaRecepientTemp smsaRecepientTemp = buildPojoToEntityCombo(recepientDTO);
                     recepientTempRepo.save(smsaRecepientTemp);
                     logger.info("Recipient updated and sent for approval: {}", recepientDTO);
@@ -118,9 +109,11 @@ public class SmsaRecepientTempService {
 
             Optional<SmsaRecepientMaster> existing = recepientMasterRepo.findById(smsaRamId);
             if (existing.isPresent()) {
-                recepientTempRepo.deleteBySmsaRamId(smsaRamId);
-                logger.info("Recipient deleted with smsaRamId: {}", smsaRamId);
-                return "Recipient deleted successfully";
+                // Convert to SmsaRecepientTemp
+                SmsaRecepientTemp temp = buildMasterToTempCombo(existing.get());
+                recepientTempRepo.save(temp);
+                logger.info("Recipient moved to temp and deleted from master with smsaRamId: {}", smsaRamId);
+                return "Recipient Delete Request went for approval";
             } else {
                 logger.warn("Recipient with smsaRamId {} not found", smsaRamId);
                 return "Recipient with smsaRamId " + smsaRamId + " not found";
@@ -211,6 +204,33 @@ public class SmsaRecepientTempService {
         return pojo;
     }
 
+    public SmsaRecepientTemp buildMasterToTempCombo(SmsaRecepientMaster entity) {
+        SmsaRecepientTemp pojo = new SmsaRecepientTemp();
+        try {
+            pojo.setSmsaRamId(entity.getSmsaRamId());
+            pojo.setRecEmpId(entity.getRecEmpId());
+            pojo.setRecEmailId(entity.getRecEmailId());
+            pojo.setRecEmpName(entity.getRecEmpName());
+            pojo.setRecGeoName(entity.getRecGeoName());
+            pojo.setRecSenderBic(entity.getRecSenderBic());
+            pojo.setRecMsgType(entity.getRecMsgType());
+            pojo.setRecGrade(entity.getRecGrade());
+            pojo.setRecCreatedBy(entity.getRecCreatedBy());
+            pojo.setRecCreatedDate(entity.getRecCreatedDate());
+            pojo.setRecModifiedBy(entity.getRecModifiedBy());
+            pojo.setRecModifiedDate(entity.getRecModifiedDate());
+            pojo.setRecVerifiedBy(entity.getRecVerifiedBy());
+            pojo.setRecVerifiedDate(entity.getRecVerifiedDate());
+            pojo.setRecCategory(entity.getRecCategory());
+            pojo.setRecCCEmpId(entity.getRecCCEmpId());
+            pojo.setRecCCMailId(entity.getRecCCMailId());
+            pojo.setSmsaRecOperation("DELETE");
+        } catch (Exception e) {
+            logger.error("Error mapping entity to DTO: {}", e.getMessage(), e);
+        }
+        return pojo;
+    }
+
     public SmsaRecepientMaster buildTempToMaster(RecepientDTO entity) {
         SmsaRecepientMaster pojo = new SmsaRecepientMaster();
         try {
@@ -244,10 +264,19 @@ public class SmsaRecepientTempService {
             SmsaRecepientTemp srt = buildPojoToEntityCombo(recepientDTO);
 
             if (action.equalsIgnoreCase("Approved")) {
-                recepientMasterRepo.save(srm);
-                recepientTempRepo.delete(srt);
-                logger.info("Recipient approved and moved to master: {}", recepientDTO);
-                return "Saved Successfully in master";
+                if (recepientDTO.getSmsaRecOperation().equalsIgnoreCase("ADD") || recepientDTO.getSmsaRecOperation().equalsIgnoreCase("UPDATE")) {
+                    recepientMasterRepo.save(srm);
+                    recepientTempRepo.delete(srt);
+                    logger.info("Recipient approved and moved to master: {}", recepientDTO);
+
+                }
+                if (recepientDTO.getSmsaRecOperation().equalsIgnoreCase("DELETE")) {
+                    srm.setSmsaRecStatus("InActive");
+                    recepientMasterRepo.save(srm);
+                    recepientTempRepo.delete(srt);
+                }
+                return "Receipient " + recepientDTO.getSmsaRecOperation().toLowerCase() + " Operation Approved Successfully";
+
             } else {
                 recepientTempRepo.delete(srt);
                 logger.info("Recipient rejected and deleted from temp: {}", recepientDTO);

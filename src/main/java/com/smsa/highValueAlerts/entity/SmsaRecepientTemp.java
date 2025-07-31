@@ -2,31 +2,31 @@ package com.smsa.highValueAlerts.entity;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import javax.persistence.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
 
 @Entity
 @Table(name = "SMSA_RECEPIENT_TEMP")
-public class SmsaRecepientTemp implements Serializable{
+public class SmsaRecepientTemp implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "threshold_seq_gen")
-    @SequenceGenerator(name = "threshold_seq_gen", sequenceName = "SMSA_RAM_SEQ", allocationSize = 1)
+    @GeneratedValue(generator = "smsa-ram-id-generator")
+    @GenericGenerator(
+            name = "smsa-ram-id-generator",
+            strategy = "com.smsa.highValueAlerts.utils.UseExistingOrGenerateId",
+            parameters = @Parameter(name = "sequence_name", value = "SMSA_RAM_SEQ")
+    )
     @Column(name = "SMSA_RAM_ID", nullable = false)
     private Long smsaRamId;
 
     @Column(name = "SMSA_REC_EMP_ID", length = 10)
     private String recEmpId;
-    
-    @Column(name ="SMSA_REC_EMAIL_ID")
+
+    @Column(name = "SMSA_REC_EMAIL_ID")
     private String recEmailId;
-    
+
     @Column(name = "SMSA_REC_EMP_NAME", length = 150)
     private String recEmpName;
 
@@ -44,7 +44,8 @@ public class SmsaRecepientTemp implements Serializable{
 
     @Column(name = "SMSA_REC_CREATED_BY", length = 10)
     private String recCreatedBy;
-     @Column(name = "SMSA_REC_CREATED_DATE")
+
+    @Column(name = "SMSA_REC_CREATED_DATE")
     private LocalDate recCreatedDate;
 
     @Column(name = "SMSA_REC_MODIFIED_BY", length = 10)
@@ -58,21 +59,21 @@ public class SmsaRecepientTemp implements Serializable{
 
     @Column(name = "SMSA_REC_VERIFIED_DATE")
     private LocalDate recVerifiedDate;
-    
-    @Column(name ="SMSA_REC_CATEGORY")
+
+    @Column(name = "SMSA_REC_CATEGORY")
     private String recCategory;
-    
-    @Column(name ="SMSA_REC_CC_EMPID")
+
+    @Column(name = "SMSA_REC_CC_EMPID")
     private String recCCEmpId;
-    
-    @Column(name="SMSA_REC_CC_MAILID")
+
+    @Column(name = "SMSA_REC_CC_MAILID")
     private String recCCMailId;
 
     @Column(name = "SMSA_REC_ACTION", length = 10)
     private String smsaRecOperation;
 
     // Getters and Setters
-
+    
     /**
      * @return the smsaRamId
      */
@@ -85,7 +86,7 @@ public class SmsaRecepientTemp implements Serializable{
      */
     public void setSmsaRamId(Long smsaRamId) {
         this.smsaRamId = smsaRamId;
-    }
+}
 
     /**
      * @return the recEmpId

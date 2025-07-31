@@ -42,8 +42,8 @@ public class SmsaHighValueAlertsController {
                     return ResponseEntity.ok(updateMsg);
                 case "DELETE":
                     if (reciepientRequestDto.getRecepientDTO().getSmsaRamId() != null) {
-                        smsaRecepientTempService.deleteRecepientByEmpId(reciepientRequestDto.getRecepientDTO().getSmsaRamId());
-                        return ResponseEntity.ok("Delete Request Went for approval");
+                        String msg=smsaRecepientTempService.deleteRecepientByEmpId(reciepientRequestDto.getRecepientDTO().getSmsaRamId());
+                        return ResponseEntity.ok(msg);
                     }
                     return ResponseEntity.ok("Id not found to delete");
                 case "APPROVED":

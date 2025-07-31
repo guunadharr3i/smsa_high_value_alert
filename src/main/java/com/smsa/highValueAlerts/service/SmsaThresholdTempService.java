@@ -64,7 +64,7 @@ public class SmsaThresholdTempService {
             thresholdTempRepo.save(smsaThresholdTemp);
             logger.info("Threshold temp data saved for approval: {}", smsaThresholdTemp);
 
-            return "Recipient added successfully and went for approval";
+            return "Threshold Data added successfully and went for approval";
 
         } catch (Exception e) {
             logger.error("Error while adding threshold temp data: {}", e.getMessage(), e);

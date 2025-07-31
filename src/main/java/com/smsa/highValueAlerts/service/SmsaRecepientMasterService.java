@@ -216,7 +216,7 @@ public class SmsaRecepientMasterService {
         List<RecepientDTO> pojoList = new ArrayList<>();
 
         try {
-            List<SmsaRecepientMaster> data = recepientMasterRepo.findAll();
+            List<SmsaRecepientMaster> data = recepientMasterRepo.findBySmsaRecStatus("Active");
             pojoList = data.stream()
                     .map(this::mapToPojo)
                     .collect(Collectors.toList());
