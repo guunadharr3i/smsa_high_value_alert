@@ -87,7 +87,7 @@ public class SmsaRecepientTempService {
 
                 if (existsInMs.isPresent()) {
                     SmsaRecepientTemp smsaRecepientTemp = buildPojoToEntityCombo(recepientDTO);
-                    recepientTempRepo.save(smsaRecepientTemp);
+                    recepientTempRepo.saveAndFlush(smsaRecepientTemp);
                     logger.info("Recipient updated and sent for approval: {}", recepientDTO);
                     return "Updated Successfully ,Went for approval";
                 }
@@ -98,6 +98,10 @@ public class SmsaRecepientTempService {
             logger.error("Error updating recipient data: {}", e.getMessage(), e);
             return "Failed to update recipient data due to internal error.";
         }
+    }
+
+    public List<SmsaRecepientTemp> getFullTempData() {
+        return recepientTempRepo.findAll();
     }
 
     public String deleteRecepientByEmpId(Long smsaRamId) {

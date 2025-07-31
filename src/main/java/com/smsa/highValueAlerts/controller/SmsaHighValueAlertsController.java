@@ -1,6 +1,7 @@
 package com.smsa.highValueAlerts.controller;
 
 import com.smsa.highValueAlerts.DTO.*;
+import com.smsa.highValueAlerts.entity.SmsaRecepientTemp;
 import com.smsa.highValueAlerts.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
@@ -42,7 +43,7 @@ public class SmsaHighValueAlertsController {
                     return ResponseEntity.ok(updateMsg);
                 case "DELETE":
                     if (reciepientRequestDto.getRecepientDTO().getSmsaRamId() != null) {
-                        String msg=smsaRecepientTempService.deleteRecepientByEmpId(reciepientRequestDto.getRecepientDTO().getSmsaRamId());
+                        String msg = smsaRecepientTempService.deleteRecepientByEmpId(reciepientRequestDto.getRecepientDTO().getSmsaRamId());
                         return ResponseEntity.ok(msg);
                     }
                     return ResponseEntity.ok("Id not found to delete");
@@ -142,6 +143,11 @@ public class SmsaHighValueAlertsController {
     @GetMapping("/")
     public String getData() {
         return "High Value Alerts Deployed Successfully";
+    }
+
+    @GetMapping("/getFullTempData")
+    public List<SmsaRecepientTemp> getTempData() {
+        return smsaRecepientTempService.getFullTempData();
     }
 
     @PostMapping("/recipientSearch")
