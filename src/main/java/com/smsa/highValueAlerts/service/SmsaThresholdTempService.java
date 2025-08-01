@@ -76,20 +76,13 @@ public class SmsaThresholdTempService {
         logger.info("Updating threshold data: {}", thresholdDTO);
         try {
             if (thresholdDTO.getThresholdId() != null) {
-                boolean existsInMs = thresholdMasterRepo.existsByMsgCurrencyAndSenderBicAndMsgType(
-                        thresholdDTO.getMsgCurrency(),
-                        thresholdDTO.getSenderBic(),
-                        thresholdDTO.getMsgType());
-                boolean existsTemp = thresholdTempRepo.existsByMsgCurrencyAndSenderBicAndMsgType(
-                        thresholdDTO.getMsgCurrency(),
-                        thresholdDTO.getSenderBic(),
-                        thresholdDTO.getMsgType());
+                Optional<SmsaThresholdMaster> existsInMs = thresholdMasterRepo.findByThresholdId(thresholdDTO.getThresholdId());
 
-                if (existsInMs || existsTemp) {
+                if (existsInMs.isPresent()) {
                     SmsaThresholdTemp smsaThresholdTemp = buildPojoToEntityCombo(thresholdDTO);
-                    thresholdTempRepo.save(smsaThresholdTemp);
-                    logger.info("Threshold temp data updated for approval: {}", smsaThresholdTemp);
-                    return "Updated Successfully, Went for approval";
+                    thresholdTempRepo.saveAndFlush(smsaThresholdTemp);
+                    logger.info("Your Request For Threshold " + thresholdDTO.getAction() + " went for approval");
+                    return "Your Request For Threshold " + thresholdDTO.getAction() + " went for approval";
                 } else {
                     logger.warn("Threshold ID not found to update: {}", thresholdDTO.getThresholdId());
                 }
@@ -102,17 +95,14 @@ public class SmsaThresholdTempService {
 
     public String deleteThresholdByEmpId(Long smsaThresholdID) {
         logger.info("Attempting to delete threshold with ID: {}", smsaThresholdID);
-        if (smsaThresholdID == null) {
-            logger.warn("Threshold ID is null");
-            return "smsaThreshold must not be null";
-        }
 
         try {
-            Optional<SmsaThresholdMaster> existing = thresholdMasterRepo.findById(smsaThresholdID);
+            Optional<SmsaThresholdMaster> existing = thresholdMasterRepo.findByThresholdId(smsaThresholdID);
             if (existing.isPresent()) {
-                thresholdTempRepo.deleteByThresholdId(smsaThresholdID);
+                SmsaThresholdTemp smsaThresholdTemp = buildMasterToTemp(existing.get());
+                thresholdTempRepo.saveAndFlush(smsaThresholdTemp);
                 logger.info("Deleted threshold temp data for ID: {}", smsaThresholdID);
-                return "Recipient deleted successfully";
+                return "Your Request for threshold Delete is went for approval";
             } else {
                 logger.warn("No recipient found with ID: {}", smsaThresholdID);
                 return "Recipient with smsaThresholdID " + smsaThresholdID + " not found";
@@ -137,7 +127,8 @@ public class SmsaThresholdTempService {
             return null;
         }
     }
-     public List<ThresholdDTO> getThresholdTempData(String createdBy) {
+
+    public List<ThresholdDTO> getThresholdTempData(String createdBy) {
         logger.info("Fetching all threshold temp data");
         try {
             List<SmsaThresholdTemp> data = thresholdTempRepo.findByCreatedByNot(createdBy);
@@ -216,21 +207,48 @@ public class SmsaThresholdTempService {
         return smsaThresholdMaster;
     }
 
+    public SmsaThresholdTemp buildMasterToTemp(SmsaThresholdMaster thresholdDTO) {
+        SmsaThresholdTemp smsaThresholdMaster = new SmsaThresholdTemp();
+        smsaThresholdMaster.setThresholdId(thresholdDTO.getThresholdId());
+        smsaThresholdMaster.setMsgCurrency(thresholdDTO.getMsgCurrency());
+        smsaThresholdMaster.setSenderBic(thresholdDTO.getSenderBic());
+        smsaThresholdMaster.setMsgType(thresholdDTO.getMsgType());
+        smsaThresholdMaster.setCategoryAFromAmount(thresholdDTO.getCategoryAFromAmount());
+        smsaThresholdMaster.setCategoryAToAmount(thresholdDTO.getCategoryAToAmount());
+        smsaThresholdMaster.setCategoryBFromAmount(thresholdDTO.getCategoryBFromAmount());
+        smsaThresholdMaster.setCategoryBToAmount(thresholdDTO.getCategoryBToAmount());
+        smsaThresholdMaster.setCreatedBy(thresholdDTO.getCreatedBy());
+        smsaThresholdMaster.setCreatedDate(thresholdDTO.getCreatedDate());
+        smsaThresholdMaster.setModifiedBy(thresholdDTO.getModifiedBy());
+        smsaThresholdMaster.setModifiedDate(thresholdDTO.getModifiedDate());
+        smsaThresholdMaster.setVerifiedBy(thresholdDTO.getVerifiedBy());
+        smsaThresholdMaster.setVerifiedDate(thresholdDTO.getVerifiedDate());
+        smsaThresholdMaster.setAction("DELETE");
+        return smsaThresholdMaster;
+    }
+
     public String approveRejectThresholdData(ThresholdDTO thresholdDTO, String action) {
         logger.info("Threshold approval process started for ID: {}, Action: {}", thresholdDTO.getThresholdId(), action);
         try {
             SmsaThresholdMaster srm = buildTempToMaster(thresholdDTO);
             SmsaThresholdTemp stt = buildPojoToEntityCombo(thresholdDTO);
 
-            if ("Approved".equalsIgnoreCase(action)) {
-                thresholdMasterRepo.save(srm);
-                thresholdTempRepo.delete(stt);
+            if (action.equalsIgnoreCase("Approved")) {
+                if (thresholdDTO.getAction().equalsIgnoreCase("ADD") || thresholdDTO.getAction().equalsIgnoreCase("UPDATE")) {
+                    thresholdMasterRepo.save(srm);
+                    thresholdTempRepo.delete(stt);
+                } else {
+                    srm.setStatus("InActive");
+                    thresholdMasterRepo.save(srm);
+                    thresholdTempRepo.delete(stt);
+                }
+
                 logger.info("Threshold approved and moved to master table: {}", srm);
-                return "Saved Successfully in master";
+                return "Your Request for threshold " + thresholdDTO.getAction() + " Approved Successfully";
             } else {
                 thresholdTempRepo.delete(stt);
                 logger.info("Threshold rejected and removed from temp: {}", stt);
-                return "Rejected Successfully";
+                return "Your Request Rejected Successfully";
             }
         } catch (Exception e) {
             logger.error("Error while processing threshold approval/rejection: {}", e.getMessage(), e);

@@ -106,10 +106,7 @@ public class SmsaRecepientTempService {
 
     public String deleteRecepientByEmpId(Long smsaRamId) {
         try {
-            if (smsaRamId == null) {
-                logger.warn("Attempted to delete with null smsaRamId");
-                return "smsaRamId must not be null";
-            }
+           
 
             Optional<SmsaRecepientMaster> existing = recepientMasterRepo.findById(smsaRamId);
             if (existing.isPresent()) {

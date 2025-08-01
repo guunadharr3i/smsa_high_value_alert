@@ -71,8 +71,11 @@ public class SmsaHighValueAlertsController {
                     String addMsg = smsaThresholdTempService.addThresholdTempData(thresholdRequestDTO.getThresholdDTO());
                     return ResponseEntity.ok(addMsg);
                 case "UPDATE":
-                    String updateMsg = smsaThresholdTempService.updateThresholdData(thresholdRequestDTO.getThresholdDTO());
-                    return ResponseEntity.ok(updateMsg);
+                    if (thresholdRequestDTO.getThresholdDTO().getThresholdId() != null) {
+                        String updateMsg = smsaThresholdTempService.updateThresholdData(thresholdRequestDTO.getThresholdDTO());
+                        return ResponseEntity.ok(updateMsg);
+                    }
+                    return ResponseEntity.ok("Id Required to Update");
                 case "DELETE":
                     if (thresholdRequestDTO.getThresholdDTO().getThresholdId() != null) {
                         smsaRecepientTempService.deleteRecepientByEmpId(thresholdRequestDTO.getThresholdDTO().getThresholdId());

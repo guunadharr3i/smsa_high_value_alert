@@ -11,14 +11,20 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
 
 @Entity
 @Table(name = "SMSA_THRESHOLD_TEMP")
-public class SmsaThresholdTemp implements Serializable{
+public class SmsaThresholdTemp implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "threshold_temp_seq_gen")
-    @SequenceGenerator(name = "threshold_temp_seq_gen", sequenceName = "SMSA_THRESHOLD_TEMP_SEQ", allocationSize = 1)
+    @GeneratedValue(generator = "smsa-threshold-id-generator")
+    @GenericGenerator(
+            name = "smsa-threshold-id-generator",
+            strategy = "com.smsa.highValueAlerts.utils.UseExistingOrGeneratedThresholdId",
+            parameters = @Parameter(name = "sequence_name", value = "SMSA_THRESHOLD_TEMP_SEQ")
+    )
     @Column(name = "SMSA_THRESHOLD_ID", nullable = false)
     private Long thresholdId;
 
@@ -65,7 +71,6 @@ public class SmsaThresholdTemp implements Serializable{
     private String action;
 
     // Getters and Setters
-
     public Long getThresholdId() {
         return thresholdId;
     }
