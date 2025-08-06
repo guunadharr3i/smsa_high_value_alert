@@ -30,31 +30,40 @@ public class SmsaHighValueAlertsController {
     @Autowired
     SmsaThresholdMasterService smsaThresholdMasterService;
 
+    @Autowired
+    SmsaAccountService smsaAccountService;
+
     @PostMapping("/recipient/actions")
     public ResponseEntity<?> recipientData(@RequestBody ReciepientRequestDto reciepientRequestDto) {
         log.info("Received recipient operation: {}", reciepientRequestDto.getOperation());
         try {
             switch (reciepientRequestDto.getOperation().toUpperCase()) {
                 case "ADD":
-                    String addMsg = smsaRecepientTempService.addRecepientTempData(reciepientRequestDto.getRecepientDTO());
+                    String addMsg = smsaRecepientTempService
+                            .addRecepientTempData(reciepientRequestDto.getRecepientDTO());
                     return ResponseEntity.ok(addMsg);
                 case "UPDATE":
-                    String updateMsg = smsaRecepientTempService.updateRecieptData(reciepientRequestDto.getRecepientDTO());
+                    String updateMsg = smsaRecepientTempService
+                            .updateRecieptData(reciepientRequestDto.getRecepientDTO());
                     return ResponseEntity.ok(updateMsg);
                 case "DELETE":
                     if (reciepientRequestDto.getRecepientDTO().getSmsaRamId() != null) {
-                        String msg = smsaRecepientTempService.deleteRecepientByEmpId(reciepientRequestDto.getRecepientDTO().getSmsaRamId());
+                        String msg = smsaRecepientTempService
+                                .deleteRecepientByEmpId(reciepientRequestDto.getRecepientDTO().getSmsaRamId());
                         return ResponseEntity.ok(msg);
                     }
                     return ResponseEntity.ok("Id not found to delete");
                 case "APPROVED":
-                    String approved = smsaRecepientTempService.approveRejectRecepientData(reciepientRequestDto.getRecepientDTO(), "Approved");
+                    String approved = smsaRecepientTempService
+                            .approveRejectRecepientData(reciepientRequestDto.getRecepientDTO(), "Approved");
                     return ResponseEntity.ok(approved);
                 case "REJECTED":
-                    String rejected = smsaRecepientTempService.approveRejectRecepientData(reciepientRequestDto.getRecepientDTO(), "Rejected");
+                    String rejected = smsaRecepientTempService
+                            .approveRejectRecepientData(reciepientRequestDto.getRecepientDTO(), "Rejected");
                     return ResponseEntity.ok(rejected);
                 default:
-                    return ResponseEntity.badRequest().body("Invalid operationType: " + reciepientRequestDto.getOperation());
+                    return ResponseEntity.badRequest()
+                            .body("Invalid operationType: " + reciepientRequestDto.getOperation());
             }
         } catch (Exception e) {
             log.error("Error occurred while processing recipient data", e);
@@ -68,28 +77,34 @@ public class SmsaHighValueAlertsController {
         try {
             switch (thresholdRequestDTO.getOperation().toUpperCase()) {
                 case "ADD":
-                    String addMsg = smsaThresholdTempService.addThresholdTempData(thresholdRequestDTO.getThresholdDTO());
+                    String addMsg = smsaThresholdTempService
+                            .addThresholdTempData(thresholdRequestDTO.getThresholdDTO());
                     return ResponseEntity.ok(addMsg);
                 case "UPDATE":
                     if (thresholdRequestDTO.getThresholdDTO().getThresholdId() != null) {
-                        String updateMsg = smsaThresholdTempService.updateThresholdData(thresholdRequestDTO.getThresholdDTO());
+                        String updateMsg = smsaThresholdTempService
+                                .updateThresholdData(thresholdRequestDTO.getThresholdDTO());
                         return ResponseEntity.ok(updateMsg);
                     }
                     return ResponseEntity.ok("Id Required to Update");
                 case "DELETE":
                     if (thresholdRequestDTO.getThresholdDTO().getThresholdId() != null) {
-                        smsaRecepientTempService.deleteRecepientByEmpId(thresholdRequestDTO.getThresholdDTO().getThresholdId());
+                        smsaRecepientTempService
+                                .deleteRecepientByEmpId(thresholdRequestDTO.getThresholdDTO().getThresholdId());
                         return ResponseEntity.ok("Delete Request Went for approval");
                     }
                     return ResponseEntity.ok("Id not found to delete");
                 case "APPROVED":
-                    String approved = smsaThresholdTempService.approveRejectThresholdData(thresholdRequestDTO.getThresholdDTO(), "Approved");
+                    String approved = smsaThresholdTempService
+                            .approveRejectThresholdData(thresholdRequestDTO.getThresholdDTO(), "Approved");
                     return ResponseEntity.ok(approved);
                 case "REJECTED":
-                    String rejected = smsaThresholdTempService.approveRejectThresholdData(thresholdRequestDTO.getThresholdDTO(), "Rejected");
+                    String rejected = smsaThresholdTempService
+                            .approveRejectThresholdData(thresholdRequestDTO.getThresholdDTO(), "Rejected");
                     return ResponseEntity.ok(rejected);
                 default:
-                    return ResponseEntity.badRequest().body("Invalid operationType: " + thresholdRequestDTO.getOperation());
+                    return ResponseEntity.badRequest()
+                            .body("Invalid operationType: " + thresholdRequestDTO.getOperation());
             }
         } catch (Exception e) {
             log.error("Error occurred while processing threshold data", e);
@@ -159,7 +174,8 @@ public class SmsaHighValueAlertsController {
             @RequestParam(defaultValue = "10") int size) {
         try {
             Pageable pageable = PageRequest.of(page, size);
-            Page<RecepientDTO> data = smsaRecepientMasterService.getFilteredMessages(receipientSearchRequest.getRecepientFilterPojo(), pageable);
+            Page<RecepientDTO> data = smsaRecepientMasterService
+                    .getFilteredMessages(receipientSearchRequest.getRecepientFilterPojo(), pageable);
             return ResponseEntity.ok(data);
         } catch (Exception e) {
             log.error("Error occurred during recipient search", e);
@@ -173,7 +189,8 @@ public class SmsaHighValueAlertsController {
             @RequestParam(defaultValue = "10") int size) {
         try {
             Pageable pageable = PageRequest.of(page, size);
-            Page<ThresholdDTO> data = smsaThresholdMasterService.getFilteredMessages(thresholdSearchRequest.getThresholdFilterPojo(), pageable);
+            Page<ThresholdDTO> data = smsaThresholdMasterService
+                    .getFilteredMessages(thresholdSearchRequest.getThresholdFilterPojo(), pageable);
             return ResponseEntity.ok(data);
         } catch (Exception e) {
             log.error("Error occurred during threshold search", e);
@@ -181,11 +198,16 @@ public class SmsaHighValueAlertsController {
         }
     }
 
-//    @PostMapping("/fetchUserData")
-//    public ResponseEntity<?> fetchUserData(@RequestBody String empId) {
-//        try {
-//        } catch (Exception e) {
-//            return ResponseEntity.status(500).body("Internal Server Error");
-//        }
-//    }
+    @PostMapping("/account")
+    public ResponseEntity<?> handleAccount(@RequestBody SmsaAccountReq request) {
+        try {
+            String result = smsaAccountService.processAccount(request);
+            return ResponseEntity.ok(result);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Internal Server Error: " + e.getMessage());
+        }
+    }
+
 }
