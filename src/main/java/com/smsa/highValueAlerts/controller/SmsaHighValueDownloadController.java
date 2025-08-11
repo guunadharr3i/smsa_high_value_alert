@@ -4,9 +4,6 @@
  */
 package com.smsa.highValueAlerts.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.smsa.highValueAlerts.DTO.FilterReceipientRequest;
 import com.smsa.highValueAlerts.DTO.FilterThresholdRequest;
 import com.smsa.highValueAlerts.DTO.RecepientFilterPojo;
@@ -15,9 +12,7 @@ import com.smsa.highValueAlerts.service.MasterCsvDownloadService;
 import com.smsa.highValueAlerts.service.MasterXlsDownloadService;
 import com.smsa.highValueAlerts.service.TempCsvDownloadService;
 import com.smsa.highValueAlerts.service.TempXlsDownloadService;
-import com.smsa.highValueAlerts.utils.AESUtil;
 import com.smsa.highValueAlerts.utils.ApiResponseCode;
-import com.smsa.highValueAlerts.utils.AuthenticateRequest;
 import com.smsa.highValueAlerts.utils.DownloadApiResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -43,12 +38,12 @@ public class SmsaHighValueDownloadController {
 
     private static final Logger logger = LogManager.getLogger(SmsaHighValueDownloadController.class);
 
-    @Autowired
-    private AuthenticateRequest authenticateApi;
-    @Value("${aes.auth.key}")
-    private String secretKey;
-    @Value("${aes.auth.vi.key}")
-    private String viKey;
+//    @Autowired
+//    private AuthenticateRequest authenticateApi;
+//    @Value("${aes.auth.key}")
+//    private String secretKey;
+//    @Value("${aes.auth.vi.key}")
+//    private String viKey;
 
     @Autowired
     TempCsvDownloadService tempCsvDownloadService;
@@ -70,20 +65,6 @@ public class SmsaHighValueDownloadController {
         logger.info("Selected downloadType: " + downloadType);
 
         try {
-            // Step 1: Decrypt incoming payload
-//            String decryptedJson = AESUtil.decrypt(encryptedRequest, secretKey, viKey);
-//            logger.info("DecryptedJson: " + decryptedJson);
-//            // Step 2: Convert decrypted JSON to FilterRequest
-//            ObjectMapper mapper = new ObjectMapper();
-//            mapper.registerModule(new JavaTimeModule());
-//            mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-//            FilterReceipientRequest filter = mapper.readValue(decryptedJson, FilterReceipientRequest.class);
-            // Step 3: Authentication
-//            String accessToken = authenticateApi.validateAndRefreshToken(filter.getTokenMap());
-//            if (accessToken == null) {
-//                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-//                        .body(DownloadApiResponse.error(ApiResponseCode.INVALID_TOKEN));
-//            }
             switch (downloadType.toUpperCase()) {
                 case "RTCSV":
                     return selectedRecepientTempDataToCsv();
@@ -113,20 +94,6 @@ public class SmsaHighValueDownloadController {
         logger.info("Selected downloadType: " + downloadType);
 
         try {
-//            // Step 1: Decrypt incoming payload
-//            String decryptedJson = AESUtil.decrypt(encryptedRequest, secretKey, viKey);
-//            logger.info("DecryptedJson: " + decryptedJson);
-//            // Step 2: Convert decrypted JSON to FilterRequest
-//            ObjectMapper mapper = new ObjectMapper();
-//            mapper.registerModule(new JavaTimeModule());
-//            mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-//            FilterThresholdRequest filter = mapper.readValue(decryptedJson, FilterThresholdRequest.class);
-//            // Step 3: Authentication
-//            String accessToken = authenticateApi.validateAndRefreshToken(filter.getTokenMap());
-//            if (accessToken == null) {
-//                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-//                        .body(DownloadApiResponse.error(ApiResponseCode.INVALID_TOKEN));
-//            }
             switch (downloadType.toUpperCase()) {
                 case "TTCSV":
                     return selectedThresholdTempDataToCsv();
