@@ -41,7 +41,8 @@ public class LdapService {
             boolean isAuthenticated = authenticateLDAPUser(lLdapContext, request.getUser_id(), request.getUser_password(), lDomainName);
              logger.info("isAuthenticated: "+isAuthenticated);
             if (isAuthenticated) {
-                return findAccountByAccountName(lLdapContext, "DC=icicibankltd,DC=com", request.getUser_id());
+                logger.info("Search Id: "+request.getSearchId());
+                return findAccountByAccountName(lLdapContext, "DC=icicibankltd,DC=com", request.getSearchId());
             } else {
                 throw new NamingException("User authentication failed: Invalid credentials.");
             }
@@ -81,7 +82,7 @@ public class LdapService {
 
                 if (attrs != null) {
                     userDetails.setLoginId(getAttributeValue(attrs, "mailNickname"));
-                    userDetails.setUsername(getAttributeValue(attrs, "givenName"));
+                    userDetails.setUsername(getAttributeValue(attrs, "displayName"));
                     userDetails.setEmail(getAttributeValue(attrs, "mail"));
                 }
             }
