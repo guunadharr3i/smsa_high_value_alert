@@ -33,6 +33,9 @@ public class SmsaHighValueAlertsController {
     @Autowired
     SmsaAccountService smsaAccountService;
 
+    @Autowired
+    LdapService ldapService;
+
     @PostMapping("/recipient/actions")
     public ResponseEntity<?> recipientData(@RequestBody ReciepientRequestDto reciepientRequestDto) {
         log.info("Received recipient operation: {}", reciepientRequestDto.getOperation());
@@ -205,6 +208,16 @@ public class SmsaHighValueAlertsController {
             return ResponseEntity.ok(result);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Internal Server Error: " + e.getMessage());
+        }
+    }
+
+    @PostMapping("/searchId")
+    public ResponseEntity<?> getUserDetails(@RequestBody LogInRequest loginRequest) {
+        try {
+            UserDetails userDetails = ldapService.ldapAuthService(loginRequest);
+            return ResponseEntity.ok(userDetails);
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Internal Server Error: " + e.getMessage());
         }
