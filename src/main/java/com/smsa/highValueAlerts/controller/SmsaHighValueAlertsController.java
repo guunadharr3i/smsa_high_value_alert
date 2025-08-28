@@ -30,9 +30,7 @@ public class SmsaHighValueAlertsController {
     @Autowired
     SmsaThresholdMasterService smsaThresholdMasterService;
 
-    @Autowired
-    SmsaAccountService smsaAccountService;
-
+    
     @Autowired
     LdapService ldapService;
 
@@ -201,18 +199,7 @@ public class SmsaHighValueAlertsController {
         }
     }
 
-    @PostMapping("/account")
-    public ResponseEntity<?> handleAccount(@RequestBody SmsaAccountReq request) {
-        try {
-            String result = smsaAccountService.processAccount(request);
-            return ResponseEntity.ok(result);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("Internal Server Error: " + e.getMessage());
-        }
-    }
-
+  
     @PostMapping("/searchId")
     public ResponseEntity<?> getUserDetails(@RequestBody LogInRequest loginRequest) {
         try {
