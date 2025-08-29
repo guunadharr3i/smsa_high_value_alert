@@ -63,24 +63,27 @@ public class SmsaAccountService {
                     throw new IllegalArgumentException("Account number '" + accNum + "' already exists in pending request.");
                 }
                 SmsaAccountTemp addTemp = mapToTempEntity(request);
+                addTemp.setStatus("Pending");
                 smsaAccountTempRepo.save(addTemp);
-                return "Account add request submitted.";
+                return "Account add request Went for Approval";
 
             case "EDIT":
                 if (!masterRepository.findByAccountNO(accNum).isPresent()) {
                     throw new IllegalArgumentException("Account number '" + accNum + "' not found in master. Cannot EDIT.");
                 }
                 SmsaAccountTemp editTemp = mapToTempEntity(request);
+                editTemp.setStatus("Pending");
                 smsaAccountTempRepo.save(editTemp);
-                return "Account edit request submitted.";
+                return "Account edit request went for approval";
 
             case "DELETE":
                 if (!masterRepository.findByAccountNO(accNum).isPresent()) {
                     throw new IllegalArgumentException("Account number '" + accNum + "' not found in master. Cannot DELETE.");
                 }
                 SmsaAccountTemp deleteTemp = mapToTempEntity(request);
+                deleteTemp.setStatus("Pending");
                 smsaAccountTempRepo.save(deleteTemp);
-                return "Account delete request submitted.";
+                return "Account delete request went for approval";
 
             case "APPROVE":
                 Optional<SmsaAccountTemp> pendingOpt = smsaAccountTempRepo.findByAccountNO(accNum);
@@ -123,7 +126,7 @@ public class SmsaAccountService {
     private SmsaAccountTemp mapToTempEntity(SmsaAccountReq req) {
         SmsaAccountTemp entity = new SmsaAccountTemp();
         entity.setActionType(req.getActionType());
-        entity.setId(req.getSmsaAccount().getId());
+        entity.setId(req.getSmsaAccount().getId() == null ? null : req.getSmsaAccount().getId());
         entity.setIo(req.getSmsaAccount().getIo());
         entity.setSenderBIC(req.getSmsaAccount().getSenderBIC());
         entity.setLocation(req.getSmsaAccount().getLocation());
@@ -152,6 +155,7 @@ public class SmsaAccountService {
         entity.setAccountNO(temp.getAccountNO());
         entity.setBankName(temp.getBankName());
         entity.setIsConfirm(temp.getIsConfirm());
+        entity.setStatus("Active");
         return entity;
     }
 
@@ -166,6 +170,7 @@ public class SmsaAccountService {
         master.setRemark(temp.getRemark());
         master.setBankName(temp.getBankName());
         master.setIsConfirm(temp.getIsConfirm());
+        master.setStatus("Active");
     }
 
     private SmsaAccountPojo updtePojoFromMaster(SmsaAccountMaster temp) {

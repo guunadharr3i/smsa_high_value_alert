@@ -4,9 +4,7 @@ import java.io.Serializable;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "SMSA_ACCOUNT", uniqueConstraints = {
-        @UniqueConstraint(columnNames = "ACCOUNT_NO")
-})
+@Table(name = "SMSA_ACCOUNT_MASTER")
 public class SmsaAccountMaster implements Serializable {
 
     @Id

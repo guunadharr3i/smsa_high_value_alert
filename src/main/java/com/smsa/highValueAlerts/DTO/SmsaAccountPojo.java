@@ -14,6 +14,8 @@ public class SmsaAccountPojo {
     private String currency;
     private String team;
     private String remark;
+    private String crudOperation;
+    private String accStatus;
 
     public Long getId() {
         return id;
@@ -109,5 +111,33 @@ public class SmsaAccountPojo {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    /**
+     * @return the crudOperation
+     */
+    public String getCrudOperation() {
+        return crudOperation;
+    }
+
+    /**
+     * @param crudOperation the crudOperation to set
+     */
+    public void setCrudOperation(String crudOperation) {
+        this.crudOperation = crudOperation;
+    }
+
+    /**
+     * @return the accStatus
+     */
+    public String getAccStatus() {
+        return accStatus;
+    }
+
+    /**
+     * @param accStatus the accStatus to set
+     */
+    public void setAccStatus(String accStatus) {
+        this.accStatus = accStatus;
     }
 }

@@ -6,14 +6,12 @@ import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity
-@Table(name = "SMSA_ACCOUNT", uniqueConstraints = {
-        @UniqueConstraint(columnNames = "ACCOUNT_NO")
-})
+@Table(name = "SMSA_ACCOUNT_TEMP")
 public class SmsaAccountTemp implements Serializable {
 
     @Id
-    @GeneratedValue(generator = "smsa-ram-id-generator")
-    @GenericGenerator(name = "smsa-ram-id-generator", strategy = "com.smsa.highValueAlerts.utils.UseExistingOrGenerateId", parameters = @Parameter(name = "sequence_name", value = "SMSA_RAM_SEQ"))
+    @GeneratedValue(generator = "smsa-acc-id-generator")
+    @GenericGenerator(name = "smsa-acc-id-generator", strategy = "com.smsa.highValueAlerts.utils.UseExistingOrGeneratedAccId", parameters = @Parameter(name = "sequence_name", value = "SMSA_RAM_SEQ"))
     @Column(name = "ID", nullable = false)
     private Long id;
 
@@ -52,6 +50,9 @@ public class SmsaAccountTemp implements Serializable {
 
     @Column(name = "ACTIONTYPE")
     private String actionType;
+    
+    @Column(name ="ACC_STATUS")
+    private String status;
 
     public Long getId() {
         return id;
@@ -155,5 +156,19 @@ public class SmsaAccountTemp implements Serializable {
 
     public void setActionType(String actionType) {
         this.actionType = actionType;
+    }
+
+    /**
+     * @return the status
+     */
+    public String getStatus() {
+        return status;
+    }
+
+    /**
+     * @param status the status to set
+     */
+    public void setStatus(String status) {
+        this.status = status;
     }
 }
