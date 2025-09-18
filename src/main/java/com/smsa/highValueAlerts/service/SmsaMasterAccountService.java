@@ -37,7 +37,7 @@ import org.springframework.data.domain.Pageable;
 
 @Service
 @Transactional
-public class SmsaAccountService {
+public class SmsaMasterAccountService {
 
     @Autowired
     private SmsaAccountRepository masterRepository;
@@ -48,7 +48,7 @@ public class SmsaAccountService {
     @PersistenceContext
     private EntityManager entityManager;
 
-    private static final Logger logger = LogManager.getLogger(SmsaAccountService.class);
+    private static final Logger logger = LogManager.getLogger(SmsaMasterAccountService.class);
 
     public String processAccountOperations(SmsaAccountReq request) {
         String action = request.getActionType().toUpperCase();
@@ -64,6 +64,7 @@ public class SmsaAccountService {
                 }
                 SmsaAccountTemp addTemp = mapToTempEntity(request);
                 addTemp.setStatus("Pending");
+                addTemp.setActionType("ADD");
                 smsaAccountTempRepo.save(addTemp);
                 return "Account add request Went for Approval";
 
@@ -73,6 +74,8 @@ public class SmsaAccountService {
                 }
                 SmsaAccountTemp editTemp = mapToTempEntity(request);
                 editTemp.setStatus("Pending");
+                editTemp.setActionType("UPDATE");
+                editTemp.setId(request.getSmsaAccount().getId());
                 smsaAccountTempRepo.save(editTemp);
                 return "Account edit request went for approval";
 
@@ -80,8 +83,13 @@ public class SmsaAccountService {
                 if (!masterRepository.findByAccountNO(accNum).isPresent()) {
                     throw new IllegalArgumentException("Account number '" + accNum + "' not found in master. Cannot DELETE.");
                 }
-                SmsaAccountTemp deleteTemp = mapToTempEntity(request);
+               Optional<SmsaAccountMaster> master = masterRepository.findByAccountNO(accNum);
+                
+                SmsaAccountMaster masterData = master.get();
+                SmsaAccountTemp deleteTemp=masterToTempEntity(masterData);
                 deleteTemp.setStatus("Pending");
+                deleteTemp.setId(masterData.getId());
+                deleteTemp.setActionType("DELETE");
                 smsaAccountTempRepo.save(deleteTemp);
                 return "Account delete request went for approval";
 
@@ -103,7 +111,12 @@ public class SmsaAccountService {
                     updateMasterFromTemp(existing, tempData);
                     masterRepository.save(existing);
                 } else if ("DELETE".equalsIgnoreCase(pendingAction)) {
-                    masterRepository.deleteByAccountNO(accNum);
+                    Optional<SmsaAccountMaster> masterAcc = masterRepository.findByAccountNO(accNum);
+                    if (masterAcc.isPresent()) {
+                        SmsaAccountMaster s = masterAcc.get();
+                        s.setStatus("InActive");
+                        masterRepository.save(s);
+                    }
                 }
 
                 smsaAccountTempRepo.delete(tempData);
@@ -125,8 +138,6 @@ public class SmsaAccountService {
 
     private SmsaAccountTemp mapToTempEntity(SmsaAccountReq req) {
         SmsaAccountTemp entity = new SmsaAccountTemp();
-        entity.setActionType(req.getActionType());
-        entity.setId(req.getSmsaAccount().getId() == null ? null : req.getSmsaAccount().getId());
         entity.setIo(req.getSmsaAccount().getIo());
         entity.setSenderBIC(req.getSmsaAccount().getSenderBIC());
         entity.setLocation(req.getSmsaAccount().getLocation());
@@ -138,6 +149,21 @@ public class SmsaAccountService {
         entity.setAccountNO(req.getSmsaAccount().getAccountNO());
         entity.setBankName(req.getSmsaAccount().getBankName());
         entity.setIsConfirm(req.getSmsaAccount().getIsConfirm());
+        return entity;
+    }
+     private SmsaAccountTemp masterToTempEntity(SmsaAccountMaster req) {
+        SmsaAccountTemp entity = new SmsaAccountTemp();
+        entity.setIo(req.getIo());
+        entity.setSenderBIC(req.getSenderBIC());
+        entity.setLocation(req.getLocation());
+        entity.setMessageTyp(req.getMessageTyp());
+        entity.setReceivedBIC(req.getReceivedBIC());
+        entity.setCurrency(req.getCurrency());
+        entity.setTeam(req.getTeam());
+        entity.setRemark(req.getRemark());
+        entity.setAccountNO(req.getAccountNO());
+        entity.setBankName(req.getBankName());
+        entity.setIsConfirm(req.getIsConfirm());
         return entity;
     }
 
@@ -175,6 +201,7 @@ public class SmsaAccountService {
 
     private SmsaAccountPojo updtePojoFromMaster(SmsaAccountMaster temp) {
         SmsaAccountPojo master = new SmsaAccountPojo();
+        master.setId(temp.getId());
         master.setIo(temp.getIo());
         master.setSenderBIC(temp.getSenderBIC());
         master.setLocation(temp.getLocation());
@@ -184,6 +211,9 @@ public class SmsaAccountService {
         master.setTeam(temp.getTeam());
         master.setRemark(temp.getRemark());
         master.setBankName(temp.getBankName());
+        master.setAccountNO(temp.getAccountNO());
+        master.setIsConfirm(temp.getIsConfirm());
+        master.setAccStatus(temp.getStatus());
         return master;
     }
 

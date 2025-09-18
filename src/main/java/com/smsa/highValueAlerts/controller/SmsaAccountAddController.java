@@ -8,7 +8,8 @@ import com.smsa.highValueAlerts.DTO.AccountSearchResponse;
 import com.smsa.highValueAlerts.DTO.SmsaAccountPojo;
 import com.smsa.highValueAlerts.DTO.SmsaAccountReq;
 import com.smsa.highValueAlerts.DTO.SwiftAccountSearchRequestPojo;
-import com.smsa.highValueAlerts.service.SmsaAccountService;
+import com.smsa.highValueAlerts.service.SmsaMasterAccountService;
+import com.smsa.highValueAlerts.service.SmsaTempAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,12 +26,15 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author abcom
  */
-@RequestMapping
+@RequestMapping("/account")
 @RestController
 public class SmsaAccountAddController {
 
     @Autowired
-    SmsaAccountService smsaAccountService;
+    SmsaMasterAccountService smsaAccountService;
+    
+    @Autowired
+    SmsaTempAccountService smsaTempAccountService;
 
     @PostMapping("/swiftAccoutOperations")
     public ResponseEntity<?> handleAccount(@RequestBody SmsaAccountReq request) {
@@ -66,7 +70,7 @@ public class SmsaAccountAddController {
             @RequestParam(defaultValue = "10") int size) {
         try {
             Pageable pageable = PageRequest.of(page, size);
-            Page<SmsaAccountPojo> pageResult = smsaAccountService.searchMasterAccountData(swiftAccountSearchRequestPojo, pageable);
+            Page<SmsaAccountPojo> pageResult = smsaTempAccountService.searchMasterAccountData(swiftAccountSearchRequestPojo, pageable);
             AccountSearchResponse res = new AccountSearchResponse();
             res.setMessages(pageResult.getContent());
             res.setTotalElements(pageResult.getTotalElements());
