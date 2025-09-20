@@ -196,6 +196,7 @@ public class SmsaMasterAccountService {
         master.setRemark(temp.getRemark());
         master.setBankName(temp.getBankName());
         master.setIsConfirm(temp.getIsConfirm());
+        master.setAccountNO(temp.getAccountNO());
         master.setStatus("Active");
     }
 

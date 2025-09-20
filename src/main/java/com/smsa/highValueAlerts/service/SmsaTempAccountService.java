@@ -107,6 +107,7 @@ public class SmsaTempAccountService {
         master.setBankName(temp.getBankName());
         master.setCrudOperation(temp.getActionType());
         master.setAccStatus(temp.getStatus());
+        master.setAccountNO(temp.getAccountNO());
         return master;
     }
 
